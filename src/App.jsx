@@ -12,12 +12,11 @@ class App extends Component {
   }
 
   componentWillMount() {
-    const mapArr = generateMap(20, 40);
+    const mapArr = generateMap(30, 60);
     this.setState({ mapArr });
   }
 
   render() {
-
     return (
       <div className="App">
         <div className="App-header">
