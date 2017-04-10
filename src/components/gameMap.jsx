@@ -1,13 +1,9 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import _ from 'lodash';
-
-/* Count the number of generations to determine rule
-   set of automata. */
-let generations = 0;
 
 /* Uses cellular automata rules to generate a new
    map with a more 'natural' appearance */
-function generateNewMap(oldMap) {
+function generateNewMap(oldMap, generations) {
   const newMap = [];
 
   oldMap.forEach((rowArr, rowIndex) => {
@@ -67,7 +63,7 @@ function generateNewMap(oldMap) {
           if (neighbourCount >= 4 || neighbourCount <= 2) {
             newMap[rowIndex].push('#');
           } else {
-            newMap[rowIndex].push('.');
+            newMap[rowIndex].push('F');
           }
         } else {
           /* Use this rule set to smooth out map and remove
@@ -75,33 +71,102 @@ function generateNewMap(oldMap) {
           if (neighbourCount >= 4) {
             newMap[rowIndex].push('#');
           } else {
-            newMap[rowIndex].push('.');
+            newMap[rowIndex].push('F');
           }
         }
       } else if (neighbourCount >= 5) {
         newMap[rowIndex].push('#');
       } else {
-        newMap[rowIndex].push('.');
+        newMap[rowIndex].push('F');
       }
     });
   });
 
-  generations += 1;
   return newMap;
 }
 
 /* Compares maps and recursively generates a new one
    if they are not equal. */
-function normalizeMapArr(oldMap, newMap) {
+function normalizeMapArr(oldMap, newMap, generations) {
   /* Check if map has finished generating and return
      the finsihed map. */
   if (_.isEqual(oldMap, newMap)) {
+
     return newMap;
   }
   // Reassign maps.
   const tempOldMap = newMap;
-  const tempNewMap = generateNewMap(newMap);
-  return normalizeMapArr(tempOldMap, tempNewMap);
+  const tempNewMap = generateNewMap(newMap, generations);
+  return normalizeMapArr(tempOldMap, tempNewMap, generations + 1);
+}
+
+function getRandomCoords(mapDimensions, gameMap) {
+  const randomCoords = {};
+  randomCoords.x = Math.floor(Math.random() * mapDimensions.height);
+  randomCoords.y = Math.floor(Math.random() * mapDimensions.width);
+
+  if (gameMap[randomCoords.x][randomCoords.y] === '#') {
+    getRandomCoords(mapDimensions, gameMap);
+  }
+
+  return randomCoords;
+}
+
+function floodFill(gameMap, x, y) {
+  if (gameMap[x][y] === 'F') {
+    gameMap[x][y] = '.';
+    floodFill(gameMap, x + 1, y);
+    floodFill(gameMap, x - 1, y);
+    floodFill(gameMap, x, y + 1);
+    floodFill(gameMap, x, y - 1);
+  }
+}
+
+function checkMapSize(gameMap) {
+  let count = 0;
+  gameMap.forEach((row, x) => {
+    row.forEach((tile, y) => {
+      if (tile === '.') {
+        count += 1;
+      } else {
+        gameMap[x][y] = '#';
+      }
+    });
+  });
+  return count;
+}
+
+function generateMapSeed(height, width) {
+  const mapArray = [];
+
+  for (let i = 0; i < height; i += 1) {
+    mapArray.push([]);
+    for (let j = 0; j < width; j += 1) {
+      if (Math.random() < 0.45) {
+        mapArray[i].push('#');
+      } else {
+        mapArray[i].push('F');
+      }
+    }
+  }
+
+  return mapArray;
+}
+
+function buildGameMap() {
+  const mapDimensions = { height: 30, width: 60 };
+  const minSize = Math.floor(mapDimensions.height * mapDimensions.width * 0.45);
+  const mapSeed = generateMapSeed(mapDimensions.height, mapDimensions.width);
+  const gameMap = normalizeMapArr([], mapSeed, 0);
+  const randomCoords = getRandomCoords(mapDimensions, gameMap);
+  floodFill(gameMap, randomCoords.x, randomCoords.y);
+  const mapSize = checkMapSize(gameMap);
+
+  if (mapSize < minSize) {
+    return buildGameMap();
+  }
+
+  return gameMap;
 }
 
 function generateMapTile(tile) {
@@ -116,8 +181,8 @@ function generateMapRow(rowArr) {
   );
 }
 
-export default function GameMap(props) {
-  const gameMap = normalizeMapArr([], props.mapArr);
+export default function GameMap() {
+  const gameMap = buildGameMap();
   return (
     <table>
       <tbody>
@@ -126,7 +191,3 @@ export default function GameMap(props) {
     </table>
   );
 }
-
-GameMap.propTypes = {
-  mapArr: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)).isRequired,
-};

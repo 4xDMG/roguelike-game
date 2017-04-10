@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import generateMap from './components/generateMap';
 import GameMap from './components/gameMap';
 
 class App extends Component {
@@ -9,11 +8,6 @@ class App extends Component {
     super(props);
 
     this.state = { };
-  }
-
-  componentWillMount() {
-    const mapArr = generateMap(30, 60);
-    this.setState({ mapArr });
   }
 
   render() {
@@ -24,9 +18,7 @@ class App extends Component {
           <h2>Welcome to React</h2>
         </div>
         <div>
-          <GameMap
-            mapArr={this.state.mapArr}
-          />
+          <GameMap />
         </div>
       </div>
     );
