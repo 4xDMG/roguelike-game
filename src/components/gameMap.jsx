@@ -7,7 +7,7 @@ export default class GameMap extends Component {
     super();
 
     this.state = {
-      gameMap: BuildGameMap(),
+      gameMap: [],
       playerPos: { x: 10, y: 10 },
     };
 
@@ -16,7 +16,7 @@ export default class GameMap extends Component {
   }
 
   componentWillMount() {
-    this.state.gameMap[this.state.playerPos.x][this.state.playerPos.y] = <Player />;
+    this.setState({ gameMap: BuildGameMap() });
   }
 
   handlePlayerMove(event) {
@@ -40,7 +40,7 @@ export default class GameMap extends Component {
         break;
       case 'd':
       case 'ArrowRight':
-        this.setState({ playerPos: { x: playerX + 1, y: playerY + 1 } });
+        this.setState({ playerPos: { x: playerX, y: playerY + 1 } });
         break;
       default:
         break;
@@ -53,10 +53,14 @@ export default class GameMap extends Component {
     return (
       <table tabIndex="1" onKeyDown={this.handlePlayerMove}>
         <tbody>
-          {this.state.gameMap.map(rowArr =>
+          {this.state.gameMap.map((rowArr, rowIndex) =>
             <tr>
-              {rowArr.map(tile =>
-                <td>{tile}</td>,
+              {rowArr.map((tile, tileIndex) => {
+                if (this.state.playerPos.x === rowIndex && this.state.playerPos.y === tileIndex) {
+                  return <Player />;
+                }
+                return <td>{tile}</td>;
+              },
               )}
             </tr>)}
         </tbody>
