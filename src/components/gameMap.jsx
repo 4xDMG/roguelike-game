@@ -28,25 +28,46 @@ export default class GameMap extends Component {
     switch (event.key) {
       case 'w':
       case 'ArrowUp':
-        this.setState({ playerPos: { x: playerX - 1, y: playerY } });
+        if (this.checkPlayerMove('x', 'up')) this.setState({ playerPos: { x: playerX - 1, y: playerY } });
         break;
       case 's':
       case 'ArrowDown':
-        this.setState({ playerPos: { x: playerX + 1, y: playerY } });
+        if (this.checkPlayerMove('x', 'down')) this.setState({ playerPos: { x: playerX + 1, y: playerY } });
         break;
       case 'a':
       case 'ArrowLeft':
-        this.setState({ playerPos: { x: playerX, y: playerY - 1 } });
+        if (this.checkPlayerMove('y', 'left')) this.setState({ playerPos: { x: playerX, y: playerY - 1 } });
         break;
       case 'd':
       case 'ArrowRight':
-        this.setState({ playerPos: { x: playerX, y: playerY + 1 } });
+        if (this.checkPlayerMove('y', 'right')) this.setState({ playerPos: { x: playerX, y: playerY + 1 } });
         break;
       default:
         break;
     }
     console.log(this.state.playerPos);
     this.forceUpdate();
+  }
+
+  checkPlayerMove(axis, direction) {
+    const gameMap = this.state.gameMap;
+    const playerX = this.state.playerPos.x;
+    const playerY = this.state.playerPos.y;
+
+    if (axis === 'x') {
+      if (direction === 'up') {
+        if (gameMap[playerX - 1][playerY] === '.') return true;
+        return false;
+      }
+      if (gameMap[playerX + 1][playerY] === '.') return true;
+      return false;
+    }
+    if (direction === 'left') {
+      if (gameMap[playerX][playerY - 1] === '.') return true;
+      return false;
+    }
+    if (gameMap[playerX][playerY + 1] === '.') return true;
+    return false;
   }
 
   render() {
