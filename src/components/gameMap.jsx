@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import BuildGameMap from './generateGameMap';
 import Player from './player';
+import { placePlayer, placeEntity, placeBoss } from './placeGameEntities';
 
 export default class GameMap extends Component {
   constructor() {
@@ -8,7 +9,10 @@ export default class GameMap extends Component {
 
     this.state = {
       gameMap: [],
-      playerPos: { x: 10, y: 10 },
+      playerPos: {},
+      potionPos: [],
+      monsterPos: [],
+      bossPos: {},
     };
 
     this.handlePlayerMove = this.handlePlayerMove.bind(this);
@@ -16,7 +20,25 @@ export default class GameMap extends Component {
   }
 
   componentWillMount() {
-    this.setState({ gameMap: BuildGameMap() });
+    const gameMapArr = BuildGameMap();
+    this.setState({ gameMap: gameMapArr });
+    this.setState({ playerPos: placePlayer(gameMapArr, 0, 0, '.') });
+
+    const potionPos = [];
+    for (let i = 0; i < 4; i += 1) {
+      potionPos.push(placeEntity(gameMapArr, 30, 60, '.'));
+    }
+
+    this.setState({ potionPos });
+
+    const monsterPos = [];
+    for (let i = 0; i < 4; i += 1) {
+      monsterPos.push(placeEntity(gameMapArr, 30, 60, '.'));
+    }
+
+    this.setState({ monsterPos });
+
+    this.setState({ bossPos: placeBoss(gameMapArr, 29, 59, '.') });
   }
 
   handlePlayerMove(event) {
@@ -45,7 +67,6 @@ export default class GameMap extends Component {
       default:
         break;
     }
-    console.log(this.state.playerPos);
     this.forceUpdate();
   }
 
@@ -71,6 +92,7 @@ export default class GameMap extends Component {
   }
 
   render() {
+    console.log(this.state);
     return (
       <table tabIndex="1" onKeyDown={this.handlePlayerMove}>
         <tbody>
