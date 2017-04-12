@@ -3,8 +3,8 @@ import _ from 'lodash';
 import BuildGameMap from './generateGameMap';
 import Player from './player';
 import { placePlayer, placeEntity, placeBoss } from './placeGameEntities';
-import Potion from './items.jsx';
-import Monster from './monsters.jsx';
+import Potion from './items';
+import { Monster, Boss } from './monsters';
 
 export default class GameMap extends Component {
   constructor() {
@@ -35,7 +35,7 @@ export default class GameMap extends Component {
     this.setState({ potionPos });
 
     const monsterPos = [];
-    for (let i = 0; i < 4; i += 1) {
+    for (let i = 0; i < 5; i += 1) {
       monsterPos.push(placeEntity(gameMapArr, 30, 60, '.'));
     }
 
@@ -111,6 +111,8 @@ export default class GameMap extends Component {
                   return <Potion />;
                 } else if (_.find(monsterPos, currentPos)) {
                   return <Monster />;
+                } else if (this.state.bossPos.x === rowIndex && this.state.bossPos.y === tileIndex) {
+                  return <Boss />;
                 }
                 return <td>{tile}</td>;
               },

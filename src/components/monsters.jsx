@@ -1,5 +1,9 @@
 import React from 'react';
 
-export default function renderMonster() {
+export function Monster() {
   return <td>M</td>;
+}
+
+export function Boss() {
+  return <td>B</td>;
 }
