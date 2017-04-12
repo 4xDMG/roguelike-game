@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
+import _ from 'lodash';
 import BuildGameMap from './generateGameMap';
 import Player from './player';
 import { placePlayer, placeEntity, placeBoss } from './placeGameEntities';
+import Potion from './items.jsx';
+import Monster from './monsters.jsx';
 
 export default class GameMap extends Component {
   constructor() {
@@ -93,14 +96,21 @@ export default class GameMap extends Component {
 
   render() {
     console.log(this.state);
+    const potionPos = this.state.potionPos;
+    const monsterPos = this.state.monsterPos;
     return (
       <table tabIndex="1" onKeyDown={this.handlePlayerMove}>
         <tbody>
           {this.state.gameMap.map((rowArr, rowIndex) =>
             <tr>
               {rowArr.map((tile, tileIndex) => {
+                const currentPos = { x: rowIndex, y: tileIndex };
                 if (this.state.playerPos.x === rowIndex && this.state.playerPos.y === tileIndex) {
                   return <Player />;
+                } else if (_.find(potionPos, currentPos)) {
+                  return <Potion />;
+                } else if (_.find(monsterPos, currentPos)) {
+                  return <Monster />;
                 }
                 return <td>{tile}</td>;
               },
