@@ -4,10 +4,10 @@ import './App.css';
 import GameMap from './components/gameMap';
 
 class App extends Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
 
-    this.state = { };
+    this.state = { height: 30, width: 60 };
   }
 
   render() {
@@ -18,7 +18,7 @@ class App extends Component {
           <h2>Welcome to React</h2>
         </div>
         <div>
-          <GameMap />
+          <GameMap MapDimensions={this.state} />
         </div>
       </div>
     );

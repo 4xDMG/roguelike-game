@@ -150,8 +150,7 @@ function generateMapSeed(height, width) {
   return mapArray;
 }
 
-export default function buildGameMap() {
-  const mapDimensions = { height: 30, width: 60 };
+export default function buildGameMap(mapDimensions) {
   const minSize = Math.floor(mapDimensions.height * mapDimensions.width * 0.45);
   const mapSeed = generateMapSeed(mapDimensions.height, mapDimensions.width);
   const gameMap = normalizeMapArr([], mapSeed, 0);
@@ -160,7 +159,7 @@ export default function buildGameMap() {
   const mapSize = checkMapSize(gameMap);
 
   if (mapSize < minSize) {
-    return buildGameMap();
+    return buildGameMap(mapDimensions);
   }
 
   return gameMap;

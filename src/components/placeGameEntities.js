@@ -4,17 +4,21 @@ export function placePlayer(arr, x, y, tile) {
   return placePlayer(arr, x + 1, y + 1, tile);
 }
 
-export function placeEntity(arr, height, width, tile) {
-  const x = Math.floor(Math.random() * height);
-  const y = Math.floor(Math.random() * width);
+export function placeEntity(arr, mapDimensions, tile) {
+  const x = Math.floor(Math.random() * mapDimensions.height);
+  const y = Math.floor(Math.random() * mapDimensions.width);
 
   if (arr[x][y] === tile) return { x, y };
 
-  return placeEntity(arr, height, width, tile);
+  return placeEntity(arr, mapDimensions, tile);
 }
 
-export function placeBoss(arr, x, y, tile) {
+export function placeBoss(arr, mapDimensions, tile) {
+  const x = mapDimensions.height - 1;
+  const y = mapDimensions.width - 1;
+
   if (arr[x][y] === tile) return { x, y };
 
-  return placeBoss(arr, x - 1, y - 1, tile);
+  const newMapDimensions = { height: x, width: y };
+  return placeBoss(arr, newMapDimensions, tile);
 }

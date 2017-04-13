@@ -7,10 +7,11 @@ import Potion from './items';
 import { Monster, Boss } from './monsters';
 
 export default class GameMap extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
+      mapDimensions: this.props.MapDimensions,
       gameMap: [],
       playerPos: {},
       potionPos: [],
@@ -23,25 +24,29 @@ export default class GameMap extends Component {
   }
 
   componentWillMount() {
-    const gameMapArr = BuildGameMap();
+    const mapDimensions = this.state.mapDimensions;
+    const gameMapArr = BuildGameMap(mapDimensions);
+
     this.setState({ gameMap: gameMapArr });
     this.setState({ playerPos: placePlayer(gameMapArr, 0, 0, '.') });
 
     const potionPos = [];
     for (let i = 0; i < 4; i += 1) {
-      potionPos.push(placeEntity(gameMapArr, 30, 60, '.'));
+      potionPos.push(placeEntity(gameMapArr, mapDimensions, '.'));
     }
 
     this.setState({ potionPos });
 
     const monsterPos = [];
     for (let i = 0; i < 5; i += 1) {
-      monsterPos.push(placeEntity(gameMapArr, 30, 60, '.'));
+      monsterPos.push(placeEntity(gameMapArr, mapDimensions, '.'));
     }
 
     this.setState({ monsterPos });
 
-    this.setState({ bossPos: placeBoss(gameMapArr, 29, 59, '.') });
+    this.setState({ bossPos: placeBoss(gameMapArr, mapDimensions, '.') });
+
+    console.log(this.state);
   }
 
   handlePlayerMove(event) {
@@ -95,7 +100,6 @@ export default class GameMap extends Component {
   }
 
   render() {
-    console.log(this.state);
     const potionPos = this.state.potionPos;
     const monsterPos = this.state.monsterPos;
     return (
@@ -123,3 +127,10 @@ export default class GameMap extends Component {
     );
   }
 }
+
+GameMap.propTypes = {
+  MapDimensions: React.PropTypes.shape({
+    height: React.PropTypes.number.isRequired,
+    width: React.PropTypes.number.isRequired,
+  }).isRequired,
+};
