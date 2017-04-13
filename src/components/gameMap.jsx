@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import BuildGameMap from './generateGameMap';
 import Player from './player';
-import { placePlayer, placeEntity, placeBoss } from './placeGameEntities';
+import { placePlayer, placeEntity, placeMonster, placeBoss } from './placeGameEntities';
 import Potion from './items';
 import { Monster, Boss } from './monsters';
 
@@ -15,7 +15,7 @@ export default class GameMap extends Component {
       gameMap: [],
       playerPos: {},
       potionPos: [],
-      monsterPos: [],
+      monsters: [],
       bossPos: {},
     };
 
@@ -37,16 +37,14 @@ export default class GameMap extends Component {
 
     this.setState({ potionPos });
 
-    const monsterPos = [];
+    const monsters = [];
     for (let i = 0; i < 5; i += 1) {
-      monsterPos.push(placeEntity(gameMapArr, mapDimensions, '.'));
+      monsters.push(placeMonster(gameMapArr, mapDimensions, '.'));
     }
 
-    this.setState({ monsterPos });
+    this.setState({ monsters });
 
     this.setState({ bossPos: placeBoss(gameMapArr, mapDimensions, '.') });
-
-    console.log(this.state);
   }
 
   handlePlayerMove(event) {
@@ -101,24 +99,33 @@ export default class GameMap extends Component {
 
   render() {
     const potionPos = this.state.potionPos;
-    const monsterPos = this.state.monsterPos;
+    const monsters = this.state.monsters;
+    console.log(monsters);
     return (
       <table tabIndex="1" onKeyDown={this.handlePlayerMove}>
         <tbody>
           {this.state.gameMap.map((rowArr, rowIndex) =>
-            <tr>
+            <tr key={`row${rowIndex}`}>
               {rowArr.map((tile, tileIndex) => {
                 const currentPos = { x: rowIndex, y: tileIndex };
+
                 if (this.state.playerPos.x === rowIndex && this.state.playerPos.y === tileIndex) {
-                  return <Player />;
+                  return <Player key="player" />;
                 } else if (_.find(potionPos, currentPos)) {
-                  return <Potion />;
-                } else if (_.find(monsterPos, currentPos)) {
-                  return <Monster />;
+                  return <Potion key={`Potion${tileIndex}`} />;
                 } else if (this.state.bossPos.x === rowIndex && this.state.bossPos.y === tileIndex) {
-                  return <Boss />;
+                  return <Boss key="boss" />;
+                } else if (monsters.some((currentMonster) => _.isEqual(currentMonster.location, currentPos))) {
+                  return <Monster />;
                 }
-                return <td>{tile}</td>;
+
+                /* monsters.forEach((currentMonster) => {
+                  if (_.isEqual(currentMonster.location, currentPos)) {
+                    return <Monster />;
+                  }
+                }); */
+
+                return <td key={`tile${tileIndex}`}>{tile}</td>;
               },
               )}
             </tr>)}
