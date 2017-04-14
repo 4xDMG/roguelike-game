@@ -4,20 +4,26 @@ export function Monster() {
   return <td>M</td>;
 }
 
-/* export class Monster extends Component {
-  constructor(x, y) {
-    super();
+/*export class Monster extends Component {
+  constructor(props) {
+    super(props);
 
-    this.health = 20;
+    this.state = {
+      health: 20,
+      damage: 8,
+      location: props.Location,
+    };
+
+    /*this.health = 20;
     this.damage = 8;
-    this.x = x;
-    this.y = y;
+    this.x = 0;
+    this.y = 0;
   }
 
   render() {
     return <td>M</td>;
   }
-} */
+}*/
 
 export function Boss() {
   return <td>B</td>;

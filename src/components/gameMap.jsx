@@ -56,24 +56,38 @@ export default class GameMap extends Component {
     switch (event.key) {
       case 'w':
       case 'ArrowUp':
+        if (this.handleEntityCollision({ x: playerX - 1, y: playerY })) break;
         if (this.checkPlayerMove('x', 'up')) this.setState({ playerPos: { x: playerX - 1, y: playerY } });
         break;
       case 's':
       case 'ArrowDown':
+        if (this.handleEntityCollision({ x: playerX + 1, y: playerY })) break;
         if (this.checkPlayerMove('x', 'down')) this.setState({ playerPos: { x: playerX + 1, y: playerY } });
         break;
       case 'a':
       case 'ArrowLeft':
+        if (this.handleEntityCollision({ x: playerX, y: playerY - 1 })) break;
         if (this.checkPlayerMove('y', 'left')) this.setState({ playerPos: { x: playerX, y: playerY - 1 } });
         break;
       case 'd':
       case 'ArrowRight':
+        if (this.handleEntityCollision({ x: playerX, y: playerY + 1 })) break;
         if (this.checkPlayerMove('y', 'right')) this.setState({ playerPos: { x: playerX, y: playerY + 1 } });
         break;
       default:
         break;
     }
     this.forceUpdate();
+  }
+
+  handleEntityCollision(newPlayerPos) {
+    const monsters = this.state.monsters;
+
+    if (monsters.some(currentMonster => _.isEqual(currentMonster.location, newPlayerPos))) {
+      return true;
+    }
+
+    return false;
   }
 
   checkPlayerMove(axis, direction) {
@@ -100,7 +114,7 @@ export default class GameMap extends Component {
   render() {
     const potionPos = this.state.potionPos;
     const monsters = this.state.monsters;
-    console.log(monsters);
+
     return (
       <table tabIndex="1" onKeyDown={this.handlePlayerMove}>
         <tbody>
@@ -115,15 +129,10 @@ export default class GameMap extends Component {
                   return <Potion key={`Potion${tileIndex}`} />;
                 } else if (this.state.bossPos.x === rowIndex && this.state.bossPos.y === tileIndex) {
                   return <Boss key="boss" />;
-                } else if (monsters.some((currentMonster) => _.isEqual(currentMonster.location, currentPos))) {
+                } else if (monsters.some(currentMonster =>
+                  _.isEqual(currentMonster.location, currentPos))) {
                   return <Monster />;
                 }
-
-                /* monsters.forEach((currentMonster) => {
-                  if (_.isEqual(currentMonster.location, currentPos)) {
-                    return <Monster />;
-                  }
-                }); */
 
                 return <td key={`tile${tileIndex}`}>{tile}</td>;
               },

@@ -1,3 +1,5 @@
+// import Monster from './monsters.jsx';
+
 export function placePlayer(arr, x, y, tile) {
   if (arr[x][y] === tile) return { x, y };
 
@@ -18,11 +20,15 @@ export function placeMonster(arr, mapDimensions, tile) {
   const y = Math.floor(Math.random() * mapDimensions.width);
 
   if (arr[x][y] === tile) {
+    // const Location = { x, y };
+    // const monster = new Monster(Location);
+
     const monster = {
       location: { x, y },
       health: 30,
       damage: 10,
     };
+
     return monster;
   }
 
