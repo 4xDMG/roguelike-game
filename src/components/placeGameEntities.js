@@ -20,16 +20,9 @@ export function placeMonster(arr, mapDimensions, tile) {
   const y = Math.floor(Math.random() * mapDimensions.width);
 
   if (arr[x][y] === tile) {
-    // const Location = { x, y };
-    // const monster = new Monster(Location);
+    const location = { x, y };
 
-    const monster = {
-      location: { x, y },
-      health: 30,
-      damage: 10,
-    };
-
-    return monster;
+    return location;
   }
 
   return placeMonster(arr, mapDimensions, tile);
