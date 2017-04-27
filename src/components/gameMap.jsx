@@ -13,6 +13,7 @@ export default class GameMap extends Component {
     this.state = {
       mapDimensions: this.props.MapDimensions,
       gameMap: [],
+      playerHealth: 100,
       playerPos: {},
       potionPos: [],
       monsters: [],
@@ -20,7 +21,6 @@ export default class GameMap extends Component {
     };
 
     this.handlePlayerMove = this.handlePlayerMove.bind(this);
-    this.forceUpdate = this.forceUpdate.bind(this);
   }
 
   componentWillMount() {
@@ -78,7 +78,6 @@ export default class GameMap extends Component {
       default:
         break;
     }
-    this.forceUpdate();
   }
 
   handleEntityCollision(newPlayerPos) {
@@ -87,7 +86,6 @@ export default class GameMap extends Component {
     const isMonster = monsters.some((currentMonster, index) => {
       monsterIndex = index;
       if (_.isEqual(currentMonster.location, newPlayerPos)) {
-
         return true;
       }
       return false;
@@ -97,7 +95,7 @@ export default class GameMap extends Component {
       const playerDamage = this.player.handleAttack();
       const monsterDamage = monsters[monsterIndex].handleAttack();
       monsters[monsterIndex].handleDefence(playerDamage);
-      this.player.handleDefence(monsterDamage);
+      this.setState({ playerHealth: this.state.playerHealth - monsterDamage });
       return true;
     }
 
@@ -142,6 +140,7 @@ export default class GameMap extends Component {
                     <Player
                       key="player"
                       ref={(player) => { this.player = player; }}
+                      Health={this.state.playerHealth}
                     />);
                 } else if (_.find(potionPos, currentPos)) {
                   return <Potion key={`Potion${tileIndex}`} />;
@@ -151,7 +150,6 @@ export default class GameMap extends Component {
                   monsterIndex = index;
                   return _.isEqual(currentMonster.location, currentPos);
                 })) {
-                  console.log(monsters[monsterIndex]);
                   return monsters[monsterIndex].render();
                 }
 

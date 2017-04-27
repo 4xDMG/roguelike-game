@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 
 export default class Player extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       level: 1,
-      health: 100,
+      health: props.Health,
       weapon: { type: 'empty', damage: 4 },
     };
 
