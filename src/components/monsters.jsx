@@ -14,16 +14,21 @@ export class Monster extends Component {
 
   handleAttack() {
     const damage = this.damage;
-    const attackDamage = Math.round(Math.random() * damage);
+    const attackDamage = Math.round(Math.random() * damage) + 1;
 
     return attackDamage;
   }
 
   handleDefence(damage) {
     this.health = this.health - damage;
-    if (this.health <= 0) {
-      this.location = null;
+    console.log('monster heath: ' + this.health);
+  }
+
+  isAlive() {
+    if (this.health > 0) {
+      return true;
     }
+    return false;
   }
 
   render() {

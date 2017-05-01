@@ -11,7 +11,7 @@ export default class GameMap extends Component {
     super(props);
 
     this.state = {
-      mapDimensions: this.props.MapDimensions,
+      mapDimensions: props.MapDimensions,
       gameMap: [],
       playerHealth: 100,
       playerPos: {},
@@ -82,20 +82,23 @@ export default class GameMap extends Component {
 
   handleEntityCollision(newPlayerPos) {
     const monsters = this.state.monsters;
-    let monsterIndex = 0;
+    let monsterIndex = NaN;
     const isMonster = monsters.some((currentMonster, index) => {
-      monsterIndex = index;
       if (_.isEqual(currentMonster.location, newPlayerPos)) {
+        monsterIndex = index;
         return true;
       }
       return false;
     });
 
-    if (isMonster) {
+    if (isMonster && monsters[monsterIndex].isAlive()) {
       const playerDamage = this.player.handleAttack();
       const monsterDamage = monsters[monsterIndex].handleAttack();
       monsters[monsterIndex].handleDefence(playerDamage);
       this.setState({ playerHealth: this.state.playerHealth - monsterDamage });
+      if (!this.player.isAlive()) {
+        alert('you lose!');
+      }
       return true;
     }
 
@@ -123,19 +126,55 @@ export default class GameMap extends Component {
     return false;
   }
 
+  getViewBoundary(player, mapDimensions, viewSize) {
+    const mapBoundaries = {};
+    mapBoundaries.top = player.x - viewSize;
+    mapBoundaries.left = player.y - viewSize;
+    mapBoundaries.bottom = player.x + viewSize;
+    mapBoundaries.right = player.y + viewSize;
+
+    if (mapBoundaries.top < 0) {
+      const excessBoundaryTop = Math.abs(mapBoundaries.top);
+      mapBoundaries.top = 0;
+      mapBoundaries.bottom = mapBoundaries.bottom + excessBoundaryTop;
+    }
+
+    if (mapBoundaries.left < 0) {
+      const excessBoundaryLeft = Math.abs(mapBoundaries.left);
+      mapBoundaries.left = 0;
+      mapBoundaries.right = mapBoundaries.right + excessBoundaryLeft;
+    }
+
+    if (mapBoundaries.bottom >= mapDimensions.x) {
+      const excessBoundaryBottom = mapBoundaries.bottom - mapDimensions.x;
+      mapBoundaries.bottom = mapDimensions.x -1;
+      mapDimensions.top = mapDimensions.top - excessBoundaryBottom;
+    }
+
+    if (mapBoundaries.right >= mapDimensions.y) {
+      const excessBoundaryRight = mapBoundaries.right - mapDimensions.y;
+      mapBoundaries.right = mapDimensions.right - 1;
+      mapBoundaries.left = mapBoundaries.left - excessBoundaryRight;
+    }
+      return mapBoundaries;
+    }
+
   render() {
+    const playerPos = this.state.playerPos;
     const potionPos = this.state.potionPos;
     const monsters = this.state.monsters;
+    const viewBoundary = this.getViewBoundary(playerPos, this.state.mapDimensions, 10);
 
     return (
       <table tabIndex="1" onKeyDown={this.handlePlayerMove}>
         <tbody>
           {this.state.gameMap.map((rowArr, rowIndex) =>
+            {if (rowIndex >= viewBoundary.top && rowIndex >= viewBoundary.bottom) console.log('yeah')}
             <tr key={`row${rowIndex}`}>
               {rowArr.map((tile, tileIndex) => {
                 const currentPos = { x: rowIndex, y: tileIndex };
                 let monsterIndex = 0;
-                if (this.state.playerPos.x === rowIndex && this.state.playerPos.y === tileIndex) {
+                if (playerPos.x === rowIndex && playerPos.y === tileIndex) {
                   return (
                     <Player
                       key="player"
@@ -156,7 +195,8 @@ export default class GameMap extends Component {
                 return <td key={`tile${tileIndex}`}>{tile}</td>;
               },
               )}
-            </tr>)}
+            </tr>
+          )}
         </tbody>
       </table>
     );

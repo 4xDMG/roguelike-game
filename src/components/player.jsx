@@ -6,12 +6,10 @@ export default class Player extends Component {
 
     this.state = {
       level: 1,
-      health: props.Health,
       weapon: { type: 'empty', damage: 4 },
     };
 
     this.handleAttack = this.handleAttack.bind(this);
-    this.handleDefence = this.handleDefence.bind(this);
   }
 
   handleAttack() {
@@ -21,12 +19,14 @@ export default class Player extends Component {
     return attackDamage;
   }
 
-  handleDefence(damage) {
-    this.setState({ health: this.state.health - damage });
+  isAlive() {
+    if (this.props.Health > 0) {
+      return true;
+    }
+    return false;
   }
 
   render() {
-    console.log('player health: ' + this.state.health);
     return <td>@</td>;
   }
 
