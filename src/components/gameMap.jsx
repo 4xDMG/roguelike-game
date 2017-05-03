@@ -13,6 +13,19 @@ export default class GameMap extends Component {
     this.state = {
       mapDimensions: props.MapDimensions,
       gameMap: [],
+      player: {
+        location: {
+          x: 0,
+          y: 0,
+        },
+        health: 100,
+        level: 1,
+        xp: 0,
+        weapon: {
+          type: 'empty',
+          damage: 4,
+        },
+      },
       playerHealth: 100,
       playerPos: {},
       potionPos: [],
@@ -29,7 +42,10 @@ export default class GameMap extends Component {
     const gameMapArr = BuildGameMap(mapDimensions);
 
     this.setState({ gameMap: gameMapArr });
-    this.setState({ playerPos: placePlayer(gameMapArr, 0, 0, '.') });
+
+    const player = this.state.player;
+    player.location = placePlayer(gameMapArr, 0, 0, '.');
+    this.setState({ player });
 
     const potionPos = [];
     for (let i = 0; i < 4; i += 1) {
@@ -52,29 +68,54 @@ export default class GameMap extends Component {
   handlePlayerMove(event) {
     event.preventDefault();
 
-    const playerX = this.state.playerPos.x;
-    const playerY = this.state.playerPos.y;
+    const player = this.state.player;
+    const playerX = this.state.player.location.x;
+    const playerY = this.state.player.location.y;
 
     switch (event.key) {
       case 'w':
       case 'ArrowUp':
-        if (this.handleEntityCollision({ x: playerX - 1, y: playerY })) break;
-        if (this.checkPlayerMove('x', 'up')) this.setState({ playerPos: { x: playerX - 1, y: playerY } });
+        if (this.handleEntityCollision({ x: playerX - 1, y: playerY })) {
+          break;
+        }
+        if (this.checkPlayerMove('x', 'up')) {
+          player.location.x = playerX - 1;
+          player.location.y = playerY;
+          this.setState({ player });
+        }
         break;
       case 's':
       case 'ArrowDown':
-        if (this.handleEntityCollision({ x: playerX + 1, y: playerY })) break;
-        if (this.checkPlayerMove('x', 'down')) this.setState({ playerPos: { x: playerX + 1, y: playerY } });
+        if (this.handleEntityCollision({ x: playerX + 1, y: playerY })) {
+          break;
+        }
+        if (this.checkPlayerMove('x', 'down')) {
+          player.location.x = playerX + 1;
+          player.location.y = playerY;
+          this.setState({ player });
+        }
         break;
       case 'a':
       case 'ArrowLeft':
-        if (this.handleEntityCollision({ x: playerX, y: playerY - 1 })) break;
-        if (this.checkPlayerMove('y', 'left')) this.setState({ playerPos: { x: playerX, y: playerY - 1 } });
+        if (this.handleEntityCollision({ x: playerX, y: playerY - 1 })) {
+          break;
+        }
+        if (this.checkPlayerMove('y', 'left')) {
+          player.location.x = playerX;
+          player.location.y = playerY - 1;
+          this.setState({ player });
+        }
         break;
       case 'd':
       case 'ArrowRight':
-        if (this.handleEntityCollision({ x: playerX, y: playerY + 1 })) break;
-        if (this.checkPlayerMove('y', 'right')) this.setState({ playerPos: { x: playerX, y: playerY + 1 } });
+        if (this.handleEntityCollision({ x: playerX, y: playerY + 1 })) {
+          break;
+        }
+        if (this.checkPlayerMove('y', 'right')) {
+          player.location.x = playerX;
+          player.location.y = playerY + 1;
+          this.setState({ player });
+        }
         break;
       default:
         break;
@@ -96,11 +137,16 @@ export default class GameMap extends Component {
     if (isMonster && monsters[monsterIndex].isAlive()) {
       const playerDamage = this.player.handleAttack();
       const monsterDamage = monsters[monsterIndex].handleAttack();
+
       monsters[monsterIndex].handleDefence(playerDamage);
       this.setState({ playerHealth: this.state.playerHealth - monsterDamage });
       if (!this.player.isAlive()) {
         alert('you lose!');
       }
+      if (!monsters[monsterIndex].isAlive()) {
+        this.player.handleLevelUp(200);
+      }
+
       return true;
     }
 
@@ -129,8 +175,8 @@ export default class GameMap extends Component {
 
   checkPlayerMove(axis, direction) {
     const gameMap = this.state.gameMap;
-    const playerX = this.state.playerPos.x;
-    const playerY = this.state.playerPos.y;
+    const playerX = this.state.player.location.x;
+    const playerY = this.state.player.location.y;
 
     if (axis === 'x') {
       if (direction === 'up') {
@@ -182,7 +228,7 @@ export default class GameMap extends Component {
   }
 
   getTileType(rowIndex, tileIndex, tile) {
-    const playerPos = this.state.playerPos;
+    const playerPos = this.state.player.location;
     const potionPos = this.state.potionPos;
     const monsters = this.state.monsters;
     const currentPos = { x: rowIndex, y: tileIndex };
@@ -210,7 +256,7 @@ export default class GameMap extends Component {
   }
 
   render() {
-    const playerPos = this.state.playerPos;
+    const playerPos = this.state.player.location;
     const viewBoundary = this.getViewBoundary(playerPos, this.state.mapDimensions, 10);
 
     return (
