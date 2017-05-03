@@ -21,7 +21,6 @@ export class Monster extends Component {
 
   handleDefence(damage) {
     this.health = this.health - damage;
-    console.log('monster heath: ' + this.health);
   }
 
   isAlive() {

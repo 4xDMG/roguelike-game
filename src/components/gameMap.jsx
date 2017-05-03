@@ -83,6 +83,7 @@ export default class GameMap extends Component {
 
   handleEntityCollision(newPlayerPos) {
     const monsters = this.state.monsters;
+    const potions = this.state.potionPos;
     let monsterIndex = NaN;
     const isMonster = monsters.some((currentMonster, index) => {
       if (_.isEqual(currentMonster.location, newPlayerPos)) {
@@ -101,6 +102,26 @@ export default class GameMap extends Component {
         alert('you lose!');
       }
       return true;
+    }
+
+    let potionIndex = NaN;
+    const isPotion = potions.some((currentPotion, index) => {
+      if (_.isEqual(currentPotion, newPlayerPos)) {
+        potionIndex = index;
+        return true;
+      }
+    });
+
+    if (isPotion) {
+      const playerHealth = this.state.playerHealth;
+      const potionPos = this.state.potionPos;
+      potionPos.splice(potionIndex, 1);
+      if (playerHealth + 20 > 100) {
+        this.setState({ playerHealth: 100 });
+      } else {
+        this.setState({ playerHealth: playerHealth + 20 });
+      }
+      this.setState({ potionPos });
     }
 
     return false;
