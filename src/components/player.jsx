@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 
-export default class Player extends Component {
+/*export default class Player extends Component {
   constructor(props) {
     super(props);
 
-    this.handleAttack = this.handleAttack.bind(this);
   }
 
   handleLevelUp(xp) {
@@ -37,4 +36,27 @@ export default class Player extends Component {
     return <td>@</td>;
   }
 
+}*/
+
+const Player = {
+  handleAttack(damage, level) {
+    const attackDamage = Math.round((Math.random() * damage) + 1);
+    return attackDamage;
+  },
+  handleXp(currentXp, currentLvl, xpEarnt) {
+    const newXp = currentXp + xpEarnt;
+    const nextLvl = 200 * currentLvl;
+    if (newXp >= nextLvl) {
+      return { xp: newXp, Lvl: currentLvl + 1 };
+    }
+    return { xp: newXp };
+  },
+  isAlive(health) {
+    if (health > 0) {
+      return true;
+    }
+    return false;
+  }
 }
+
+export default Player;

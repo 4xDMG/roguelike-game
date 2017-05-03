@@ -26,8 +26,6 @@ export default class GameMap extends Component {
           damage: 4,
         },
       },
-      playerHealth: 100,
-      playerPos: {},
       potionPos: [],
       monsters: [],
       bossPos: {},
@@ -38,11 +36,13 @@ export default class GameMap extends Component {
   }
 
   componentWillMount() {
+    // Build a new Map.
     const mapDimensions = this.state.mapDimensions;
     const gameMapArr = BuildGameMap(mapDimensions);
 
     this.setState({ gameMap: gameMapArr });
 
+    // Initialize starting positions for entities.
     const player = this.state.player;
     player.location = placePlayer(gameMapArr, 0, 0, '.');
     this.setState({ player });
@@ -71,7 +71,7 @@ export default class GameMap extends Component {
     const player = this.state.player;
     const playerX = this.state.player.location.x;
     const playerY = this.state.player.location.y;
-
+    // Check tile that player wants to move to and move Player
     switch (event.key) {
       case 'w':
       case 'ArrowUp':
@@ -125,6 +125,8 @@ export default class GameMap extends Component {
   handleEntityCollision(newPlayerPos) {
     const monsters = this.state.monsters;
     const potions = this.state.potionPos;
+
+    // Check if tile contains a monster.
     let monsterIndex = NaN;
     const isMonster = monsters.some((currentMonster, index) => {
       if (_.isEqual(currentMonster.location, newPlayerPos)) {
@@ -134,19 +136,31 @@ export default class GameMap extends Component {
       return false;
     });
 
+    // If tile contains a monster handle combat.
     if (isMonster && monsters[monsterIndex].isAlive()) {
-      const playerDamage = this.player.handleAttack();
+      const player = this.state.player;
+      const playerDamage = Player.handleAttack(player.weapon.damage, player.level);
       const monsterDamage = monsters[monsterIndex].handleAttack();
 
       monsters[monsterIndex].handleDefence(playerDamage);
-      this.setState({ playerHealth: this.state.playerHealth - monsterDamage });
-      if (!this.player.isAlive()) {
+      player.health = player.health - monsterDamage;
+      // Check if Player survived combat.
+      if (!Player.isAlive(player.health)) {
         alert('you lose!');
       }
+      // If Player defeated Monster give Player xp.
       if (!monsters[monsterIndex].isAlive()) {
-        this.player.handleLevelUp(200);
+        const newXp = Player.handleXp(player.xp, player.level, 200);
+        console.log(newXp);
+        if (newXp.Lvl) {
+          player.level = newXp.Lvl;
+        }
+        player.xp = newXp.xp;
+        console.log(player.level);
+        console.log(player.xp);
       }
 
+      this.setState({ player });
       return true;
     }
 
@@ -235,12 +249,7 @@ export default class GameMap extends Component {
     let monsterIndex = 0;
 
     if (playerPos.x === rowIndex && playerPos.y === tileIndex) {
-      return (
-        <Player
-          key="player"
-          ref={(player) => { this.player = player; }}
-          Health={this.state.playerHealth}
-        />);
+      return <td>@</td>;
     } else if (_.find(potionPos, currentPos)) {
       return <Potion key={`Potion${tileIndex}`} />;
     } else if (this.state.bossPos.x === rowIndex && this.state.bossPos.y === tileIndex) {
