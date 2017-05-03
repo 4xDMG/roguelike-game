@@ -21,6 +21,7 @@ export default class GameMap extends Component {
     };
 
     this.handlePlayerMove = this.handlePlayerMove.bind(this);
+    this.getTileType = this.getTileType.bind(this);
   }
 
   componentWillMount() {
@@ -156,47 +157,60 @@ export default class GameMap extends Component {
       mapBoundaries.right = mapDimensions.right - 1;
       mapBoundaries.left = mapBoundaries.left - excessBoundaryRight;
     }
-      return mapBoundaries;
-    }
+    return mapBoundaries;
+  }
 
-  render() {
+  getTileType(rowIndex, tileIndex, tile) {
     const playerPos = this.state.playerPos;
     const potionPos = this.state.potionPos;
     const monsters = this.state.monsters;
+    const currentPos = { x: rowIndex, y: tileIndex };
+    let monsterIndex = 0;
+
+    if (playerPos.x === rowIndex && playerPos.y === tileIndex) {
+      return (
+        <Player
+          key="player"
+          ref={(player) => { this.player = player; }}
+          Health={this.state.playerHealth}
+        />);
+    } else if (_.find(potionPos, currentPos)) {
+      return <Potion key={`Potion${tileIndex}`} />;
+    } else if (this.state.bossPos.x === rowIndex && this.state.bossPos.y === tileIndex) {
+      return <Boss key="boss" />;
+    } else if (monsters.some((currentMonster, index) => {
+      monsterIndex = index;
+      return _.isEqual(currentMonster.location, currentPos);
+    })) {
+      return monsters[monsterIndex].render();
+    }
+
+    return <td key={`tile${tileIndex}`}>{tile}</td>;
+  }
+
+  render() {
+    const playerPos = this.state.playerPos;
     const viewBoundary = this.getViewBoundary(playerPos, this.state.mapDimensions, 10);
 
     return (
       <table tabIndex="1" onKeyDown={this.handlePlayerMove}>
         <tbody>
-          {this.state.gameMap.map((rowArr, rowIndex) =>
-            {if (rowIndex >= viewBoundary.top && rowIndex >= viewBoundary.bottom) console.log('yeah')}
-            <tr key={`row${rowIndex}`}>
-              {rowArr.map((tile, tileIndex) => {
-                const currentPos = { x: rowIndex, y: tileIndex };
-                let monsterIndex = 0;
-                if (playerPos.x === rowIndex && playerPos.y === tileIndex) {
-                  return (
-                    <Player
-                      key="player"
-                      ref={(player) => { this.player = player; }}
-                      Health={this.state.playerHealth}
-                    />);
-                } else if (_.find(potionPos, currentPos)) {
-                  return <Potion key={`Potion${tileIndex}`} />;
-                } else if (this.state.bossPos.x === rowIndex && this.state.bossPos.y === tileIndex) {
-                  return <Boss key="boss" />;
-                } else if (monsters.some((currentMonster, index) => {
-                  monsterIndex = index;
-                  return _.isEqual(currentMonster.location, currentPos);
-                })) {
-                  return monsters[monsterIndex].render();
-                }
+          {this.state.gameMap.map((rowArr, rowIndex) => {
+            if (rowIndex >= viewBoundary.top && rowIndex >= viewBoundary.bottom) {
+              return (
+                <tr key={`row${rowIndex}`}>
+                  {rowArr.map((tile, tileIndex) => {
+                    if (tileIndex >= viewBoundary.left && tileIndex <= viewBoundary.right){
+                      return this.getTileType(rowIndex, tileIndex, tile);
+                    }
+                  })
+                  }
+                </tr>
+              );
+            }
+          })
+          }
 
-                return <td key={`tile${tileIndex}`}>{tile}</td>;
-              },
-              )}
-            </tr>
-          )}
         </tbody>
       </table>
     );
