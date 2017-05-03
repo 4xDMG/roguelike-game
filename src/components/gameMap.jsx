@@ -148,7 +148,7 @@ export default class GameMap extends Component {
 
     if (mapBoundaries.bottom >= mapDimensions.x) {
       const excessBoundaryBottom = mapBoundaries.bottom - mapDimensions.x;
-      mapBoundaries.bottom = mapDimensions.x -1;
+      mapBoundaries.bottom = mapDimensions.x - 1;
       mapDimensions.top = mapDimensions.top - excessBoundaryBottom;
     }
 
@@ -196,7 +196,7 @@ export default class GameMap extends Component {
       <table tabIndex="1" onKeyDown={this.handlePlayerMove}>
         <tbody>
           {this.state.gameMap.map((rowArr, rowIndex) => {
-            if (rowIndex >= viewBoundary.top && rowIndex >= viewBoundary.bottom) {
+            if (rowIndex >= viewBoundary.top && rowIndex <= viewBoundary.bottom) {
               return (
                 <tr key={`row${rowIndex}`}>
                   {rowArr.map((tile, tileIndex) => {

@@ -7,7 +7,7 @@ class App extends Component {
   constructor() {
     super();
 
-    this.state = { height: 30, width: 60 };
+    this.state = { height: 60, width: 60 };
   }
 
   render() {
