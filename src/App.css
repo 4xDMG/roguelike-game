@@ -53,27 +53,27 @@ td {
 }
 
 .wall-top {
-  background-image: url("./images/wall-texture-top.png");
+  background: url("./images/wall-texture-top.png") ;
   background-size: cover;
 }
 
 .wall-top-border {
-  background-image: url("./images/wall-top.png");
+  background: #000000 url("./images/wall-top.png");
   background-size: cover;
 }
 
 .wall-left {
-  background-image: url("./images/wall-left.png");
+  background: #000000 url("./images/wall-left.png");
   background-size: cover;
 }
 
 .wall-right {
-  background-image: url("./images/wall-right.png");
+  background: #000000 url("./images/wall-right.png");
   background-size: cover;
 }
 
 .wall-bottom {
-  background-image: url("./images/wall-bottom.png");
+  background: #000000 url("./images/wall-bottom.png");
   background-size: cover;
 }
 
@@ -96,3 +96,24 @@ td {
   background-image: url("./images/corner-top-right.png");
   background-size: cover;
 }
+
+.corner-bottom-left-convex {
+  background: url("./images/wall-bottom.png"), url("./images/wall-left.png"), rgba(0,0,0,1);
+  background-size: cover;
+}
+
+.corner-bottom-right-convex {
+  background: url("./images/wall-bottom.png"), url("./images/wall-right.png"), rgba(0,0,0,1);
+  background-size: cover;
+}
+
+.corner-top-left-convex {
+  background: url("./images/wall-texture-top.png"), url("./images/wall-left.png"), rgba(0,0,0,1);
+  background-size: cover;
+}
+
+.corner-top-right-convex {
+  background: url("./images/wall-texture-top.png"), url("./images/wall-right.png"), rgba(0,0,0,1);
+  background-size: cover;
+}
+

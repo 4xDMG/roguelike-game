@@ -287,7 +287,7 @@ export default class GameMap extends Component {
     mapBoundaries.left = player.y - viewSize;
     mapBoundaries.bottom = player.x + viewSize;
     mapBoundaries.right = player.y + viewSize;
-    console.log(mapBoundaries);
+
     if (mapBoundaries.top < 0) {
       const excessBoundaryTop = Math.abs(mapBoundaries.top);
       mapBoundaries.top = 0;
@@ -305,16 +305,14 @@ export default class GameMap extends Component {
       console.log(excessBoundaryBottom);
       mapBoundaries.bottom = mapDimensions.height - 1;
       mapBoundaries.top -= excessBoundaryBottom + 1;
-      console.log(mapBoundaries);
     }
-    console.log(mapDimensions);
+
     if (mapBoundaries.right >= mapDimensions.width) {
       const excessBoundaryRight = Math.abs(mapBoundaries.right - mapDimensions.width);
-      console.log(excessBoundaryRight);
       mapBoundaries.right = mapDimensions.width - 1;
       mapBoundaries.left -= excessBoundaryRight + 1;
-      console.log(mapBoundaries);
     }
+
     return mapBoundaries;
   }
 
@@ -342,36 +340,80 @@ export default class GameMap extends Component {
     } else if (_.isEqual(weapon.location, currentPos)) {
       return 'W';
     } else if (tile === '#') {
-      const wallClassesArr = [];
+      // This section handles top wall graphics.
+      // Check if following row is an array.
+      if (Array.isArray(gameMap[rowIndex + 1])) {
+        // If tile in next array is floor make this tile a wall-top texture.
+        if (gameMap[rowIndex + 1][tileIndex] === '.') {
+          return <td className="wall-top" />;
+        }
+        // Check if two rows down is an array.
+        if (Array.isArray(gameMap[rowIndex + 2])) {
+          // If tile two rows away is floor make this tile a wall-top-border.
+          if (gameMap[rowIndex + 2][tileIndex] === '.') {
+            return <td className="wall-top-border" />;
+          }
+        }
+      }
+
+      // This section handles left wall graphics.
+      if (gameMap[rowIndex][tileIndex + 1] === '.') {
+        return <td className="wall-left" />;
+      }
+
+      // This section handles right wall graphics.
+      if (gameMap[rowIndex][tileIndex - 1] === '.') {
+        return <td className="wall-right" />;
+      }
+
+      // This section handles bottom wall graphics.
+      if (Array.isArray(gameMap[rowIndex - 1])) {
+        if (gameMap[rowIndex - 1][tileIndex] === '.') {
+          return <td className="wall-bottom" />;
+        }
+      }
+
+      /*if (Array.isArray(gameMap[rowIndex + 1])) {
+        if (gameMap[rowIndex][tileIndex + 1]) {
+          if (gameMap[rowIndex + 1][tileIndex] === '.' && gameMap[rowIndex][tileIndex + 1] === '.') {
+            return <td className="corner-top-left-convex" />;
+          }
+        }
+      }
+
+      /*const wallClassesArr = [];
       if (Array.isArray(gameMap[rowIndex + 1])) {
         if (gameMap[rowIndex + 1][tileIndex] === '.') {
-          wallClassesArr.push('wall-top');
+          wallClassesArr.push('url("./images/wall-texture-top.png")');
         }
       } else if (Array.isArray(gameMap[rowIndex + 2])) {
         if (gameMap[rowIndex + 2][tileIndex] === '.') {
-          wallClassesArr.push('wall-top-border');
+          wallClassesArr.push('url("./images/wall-top.png")');
         }
       }
       if (gameMap[rowIndex][tileIndex + 1] === '.') {
-        wallClassesArr.push('wall-left');
+        wallClassesArr.push('url(./"images/wall-left.png")');
       }
       if (Array.isArray(gameMap[rowIndex - 1])) {
         if (gameMap[rowIndex - 1][tileIndex] === '.') {
-          wallClassesArr.push('wall-bottom');
+          wallClassesArr.push('url("./images/wall-bottom.png")');
         }
       }
       if (tileIndex - 1 >= 0) {
         if (gameMap[rowIndex][tileIndex - 1] === '.') {
-          wallClassesArr.push('wall-right');
+          wallClassesArr.push('url("./images/wall-right.png")');
         }
         if (Array.isArray(gameMap[rowIndex - 1])) {
           if (gameMap[rowIndex - 1][tileIndex - 1] === '.') {
-            wallClassesArr.push('corner-bottom-right');
+            wallClassesArr.push('url("./images/corner-bottom-right.png")');
           }
         }
       }
-      const wallClasses = wallClassesArr.join(' ');
-      return <td className={wallClasses} key={`tile${tileIndex}`}>{tile}</td>;
+      const wallImages = wallClassesArr.join(', ');
+      const wallStyles = {
+        backgroundImage: `${wallImages}, rgba(0, 255, 255, 1)`,
+      };*/
+      return <td key={`tile${tileIndex}`}>{tile}</td>;
     }
 
     return <td className="floor" key={`tile${tileIndex}`} />;
