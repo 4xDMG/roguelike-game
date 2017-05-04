@@ -343,19 +343,27 @@ export default class GameMap extends Component {
       // This section handles top-left and top-right corners.
       if (Array.isArray(gameMap[rowIndex + 1]) && Array.isArray(gameMap[rowIndex + 2])) {
         if (gameMap[rowIndex + 1][tileIndex] === '#') {
+          // Handles convex corners.
           if (gameMap[rowIndex + 2][tileIndex] === '.') {
             if (gameMap[rowIndex + 1][tileIndex + 1] === '.') {
               return <td className="corner-top-left-convex" />;
             } else if (gameMap[rowIndex + 1][tileIndex - 1] === '.') {
               return <td className="corner-top-right-convex" />;
             }
+          // Handles concave corners.
           } else if (gameMap[rowIndex][tileIndex + 1] === '#' && gameMap[rowIndex + 2][tileIndex + 1] === '.') {
-            return <td className="corner-top-left" />;
+            if (gameMap[rowIndex + 1][tileIndex + 1] === '#') {
+              return <td className="corner-top-left" />;
+            }
+            return <td className="wall-left" />;
+          } else if (gameMap[rowIndex][tileIndex - 1] === '#' && gameMap[rowIndex + 2][tileIndex - 1] === '.') {
+            if (gameMap[rowIndex + 1][tileIndex - 1] === '#') {
+              return <td className="corner-top-right" />;
+            }
+            return <td className="wall-right" />;
           }
         }
-        // Handles convex corners.
-        
-        // Handles concave corners.
+     
         if (gameMap[rowIndex + 1][tileIndex] === '#' && gameMap[rowIndex][tileIndex + 1] === '#') {}
 
       }
