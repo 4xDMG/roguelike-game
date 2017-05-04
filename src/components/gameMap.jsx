@@ -340,6 +340,26 @@ export default class GameMap extends Component {
     } else if (_.isEqual(weapon.location, currentPos)) {
       return 'W';
     } else if (tile === '#') {
+      // This section handles top-left and top-right corners.
+      if (Array.isArray(gameMap[rowIndex + 1]) && Array.isArray(gameMap[rowIndex + 2])) {
+        if (gameMap[rowIndex + 1][tileIndex] === '#') {
+          if (gameMap[rowIndex + 2][tileIndex] === '.') {
+            if (gameMap[rowIndex + 1][tileIndex + 1] === '.') {
+              return <td className="corner-top-left-convex" />;
+            } else if (gameMap[rowIndex + 1][tileIndex - 1] === '.') {
+              return <td className="corner-top-right-convex" />;
+            }
+          } else if (gameMap[rowIndex][tileIndex + 1] === '#' && gameMap[rowIndex + 2][tileIndex + 1] === '.') {
+            return <td className="corner-top-left" />;
+          }
+        }
+        // Handles convex corners.
+        
+        // Handles concave corners.
+        if (gameMap[rowIndex + 1][tileIndex] === '#' && gameMap[rowIndex][tileIndex + 1] === '#') {}
+
+      }
+
       // This section handles top wall graphics.
       // Check if following row is an array.
       if (Array.isArray(gameMap[rowIndex + 1])) {

@@ -108,12 +108,14 @@ td {
 }
 
 .corner-top-left-convex {
-  background: url("./images/wall-texture-top.png"), url("./images/wall-left.png"), rgba(0,0,0,1);
+  background-color: #000000;
+  background-image: url("./images/wall-top.png"), url("./images/wall-left.png");
   background-size: cover;
 }
 
 .corner-top-right-convex {
-  background: url("./images/wall-texture-top.png"), url("./images/wall-right.png"), rgba(0,0,0,1);
+  background-color: #000000;
+  background-image: url("./images/wall-top.png"), url("./images/wall-right.png");
   background-size: cover;
 }
 
