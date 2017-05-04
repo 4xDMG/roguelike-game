@@ -287,7 +287,7 @@ export default class GameMap extends Component {
     mapBoundaries.left = player.y - viewSize;
     mapBoundaries.bottom = player.x + viewSize;
     mapBoundaries.right = player.y + viewSize;
-
+    console.log(mapBoundaries);
     if (mapBoundaries.top < 0) {
       const excessBoundaryTop = Math.abs(mapBoundaries.top);
       mapBoundaries.top = 0;
@@ -300,16 +300,20 @@ export default class GameMap extends Component {
       mapBoundaries.right += excessBoundaryLeft;
     }
 
-    if (mapBoundaries.bottom >= mapDimensions.x) {
-      const excessBoundaryBottom = mapBoundaries.bottom - mapDimensions.x;
-      mapBoundaries.bottom = mapDimensions.x - 1;
-      mapBoundaries.top -= excessBoundaryBottom;
+    if (mapBoundaries.bottom >= mapDimensions.height) {
+      const excessBoundaryBottom = Math.abs(mapBoundaries.bottom - mapDimensions.height);
+      console.log(excessBoundaryBottom);
+      mapBoundaries.bottom = mapDimensions.height - 1;
+      mapBoundaries.top -= excessBoundaryBottom + 1;
+      console.log(mapBoundaries);
     }
-
-    if (mapBoundaries.right >= mapDimensions.y) {
-      const excessBoundaryRight = mapBoundaries.right - mapDimensions.y;
-      mapBoundaries.right = mapDimensions.right - 1;
-      mapBoundaries.left -= excessBoundaryRight;
+    console.log(mapDimensions);
+    if (mapBoundaries.right >= mapDimensions.width) {
+      const excessBoundaryRight = Math.abs(mapBoundaries.right - mapDimensions.width);
+      console.log(excessBoundaryRight);
+      mapBoundaries.right = mapDimensions.width - 1;
+      mapBoundaries.left -= excessBoundaryRight + 1;
+      console.log(mapBoundaries);
     }
     return mapBoundaries;
   }
@@ -339,10 +343,14 @@ export default class GameMap extends Component {
       return 'W';
     } else if (tile === '#') {
       const wallClassesArr = [];
-      if (gameMap[rowIndex + 1][tileIndex] === '.') {
-        wallClassesArr.push('wall-top');
-      } else if (gameMap[rowIndex + 2][tileIndex] === '.') {
-        wallClassesArr.push('wall-top-border');
+      if (Array.isArray(gameMap[rowIndex + 1])) {
+        if (gameMap[rowIndex + 1][tileIndex] === '.') {
+          wallClassesArr.push('wall-top');
+        }
+      } else if (Array.isArray(gameMap[rowIndex + 2])) {
+        if (gameMap[rowIndex + 2][tileIndex] === '.') {
+          wallClassesArr.push('wall-top-border');
+        }
       }
       if (gameMap[rowIndex][tileIndex + 1] === '.') {
         wallClassesArr.push('wall-left');
