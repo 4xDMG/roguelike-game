@@ -7,7 +7,12 @@ class App extends Component {
   constructor() {
     super();
 
-    this.state = { height: 60, width: 60 };
+    this.state = {
+      mapDimensions: {
+        height: 60,
+        width: 60,
+      },
+    };
   }
 
   render() {
@@ -18,7 +23,9 @@ class App extends Component {
           <h2>Welcome to React</h2>
         </div>
         <div>
-          <GameMap MapDimensions={this.state} />
+          <GameMap
+            MapDimensions={this.state.mapDimensions}
+          />
         </div>
       </div>
     );

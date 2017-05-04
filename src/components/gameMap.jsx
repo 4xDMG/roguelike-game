@@ -5,6 +5,7 @@ import Player from './player';
 import { placePlayer, placeEntity, placeMonster, placeBoss } from './placeGameEntities';
 import Potion from './items';
 import { Monster, Boss } from './monsters';
+import PlayerInfo from './playerInfo';
 
 export default class GameMap extends Component {
   constructor(props) {
@@ -12,6 +13,7 @@ export default class GameMap extends Component {
 
     this.state = {
       mapDimensions: props.MapDimensions,
+      currentLevel: 0,
       gameMap: [],
       player: {
         location: {
@@ -28,7 +30,33 @@ export default class GameMap extends Component {
       },
       potionPos: [],
       monsters: [],
-      bossPos: {},
+      boss: {},
+      weapons: [
+        {
+          type: 'short sword',
+          damage: 8,
+          location: {
+            x: 0,
+            y: 0,
+          },
+        },
+        {
+          type: 'long sword',
+          damage: 12,
+          location: {
+            x: 0,
+            y: 0,
+          },
+        },
+        {
+          type: 'battle axe',
+          damage: 15,
+          location: {
+            x: 0,
+            y: 0,
+          },
+        },
+      ],
     };
 
     this.handlePlayerMove = this.handlePlayerMove.bind(this);
@@ -39,6 +67,8 @@ export default class GameMap extends Component {
     // Build a new Map.
     const mapDimensions = this.state.mapDimensions;
     const gameMapArr = BuildGameMap(mapDimensions);
+    const currentLevel = this.state.currentLevel;
+    this.setState({ currentLevel: currentLevel + 1 });
 
     this.setState({ gameMap: gameMapArr });
 
@@ -62,7 +92,14 @@ export default class GameMap extends Component {
     }
 
     this.setState({ monsters });
-    this.setState({ bossPos: placeBoss(gameMapArr, mapDimensions, '.') });
+
+    const weapons = this.state.weapons;
+    weapons[currentLevel].location = placeEntity(gameMapArr, mapDimensions, '.');
+    this.setState({ weapons }); 
+
+    const bossLoc = placeBoss(gameMapArr, mapDimensions, '.');
+    const boss = new Monster(bossLoc, currentLevel + 2);
+    this.setState({ boss });
   }
 
   handlePlayerMove(event) {
@@ -173,20 +210,57 @@ export default class GameMap extends Component {
     });
 
     if (isPotion) {
-      const playerHealth = this.state.playerHealth;
+      const player = this.state.player;
       const potionPos = this.state.potionPos;
       potionPos.splice(potionIndex, 1);
-      if (playerHealth + 20 > 100) {
-        this.setState({ playerHealth: 100 });
+      if ((player.health + 20) >= 100) {
+        player.health = 100;
+        this.setState({ player });
       } else {
-        this.setState({ playerHealth: playerHealth + 20 });
+        player.health = player.health + 20;
+        this.setState({ player });
       }
       this.setState({ potionPos });
+    }
+
+    const weapon = this.state.weapons[this.state.currentLevel - 1];
+    if (_.isEqual(newPlayerPos, weapon.location)) {
+      const player = this.state.player;
+      player.weapon = weapon;
+      this.setState({ player });
+    }
+
+    const boss = this.state.boss;
+    if(_.isEqual(newPlayerPos, boss.location)) {
+      const player = this.state.player;
+      const playerDamage = Player.handleAttack(player.weapon.damage, player.level);
+      const bossDamage = boss.handleAttack();
+
+      boss.handleDefence(playerDamage);
+      player.health = player.health - bossDamage;
+      // Check if Player survived combat.
+      if (!Player.isAlive(player.health)) {
+        alert('you lose!');
+      }
+      // If Player defeated Monster give Player xp.
+      if (!boss.isAlive()) {
+        const newXp = Player.handleXp(player.xp, player.level, 200);
+        if (newXp.Lvl) {
+          player.level = newXp.Lvl;
+        }
+        player.xp = newXp.xp;
+        boss.location = 0;
+      }
+
+      this.setState({ boss });
+      this.setState({ player });
+      return true;
     }
 
     return false;
   }
 
+  // Check if tile to move to is a wall.
   checkPlayerMove(axis, direction) {
     const gameMap = this.state.gameMap;
     const playerX = this.state.player.location.x;
@@ -208,6 +282,7 @@ export default class GameMap extends Component {
     return false;
   }
 
+  // Gets a portion of the map to display.
   getViewBoundary(player, mapDimensions, viewSize) {
     const mapBoundaries = {};
     mapBoundaries.top = player.x - viewSize;
@@ -241,27 +316,47 @@ export default class GameMap extends Component {
     return mapBoundaries;
   }
 
-  getTileType(rowIndex, tileIndex, tile) {
+
+  getTileType(rowIndex, tileIndex, tile, gameMap) {
     const playerPos = this.state.player.location;
     const potionPos = this.state.potionPos;
     const monsters = this.state.monsters;
+    const boss = this.state.boss;
+    const weapon = this.state.weapons[this.state.currentLevel - 1];
     const currentPos = { x: rowIndex, y: tileIndex };
     let monsterIndex = 0;
 
-    if (playerPos.x === rowIndex && playerPos.y === tileIndex) {
+    if (_.isEqual(playerPos, currentPos)) {
       return <td>@</td>;
     } else if (_.find(potionPos, currentPos)) {
       return <Potion key={`Potion${tileIndex}`} />;
-    } else if (this.state.bossPos.x === rowIndex && this.state.bossPos.y === tileIndex) {
+    } else if (_.isEqual(boss.location, currentPos)) {
       return <Boss key="boss" />;
     } else if (monsters.some((currentMonster, index) => {
       monsterIndex = index;
       return _.isEqual(currentMonster.location, currentPos);
     })) {
       return monsters[monsterIndex].render();
+    } else if (_.isEqual(weapon.location, currentPos)) {
+      return 'W';
+    } else if (tile === '#') {
+      if (gameMap[rowIndex + 1][tileIndex] === '.') {
+        return <td className="wall-top" key={`tile${tileIndex}`}></td>;
+      } else if (gameMap[rowIndex + 2][tileIndex] === '.') {
+        return <td className="wall-top-border" key={`tile${tileIndex}`}></td>;
+      } else if (gameMap[rowIndex][tileIndex + 1] === '.') {
+        return <td className="wall-left" key={`tile${tileIndex}`}></td>;
+      } else if (gameMap[rowIndex][tileIndex - 1] === '.') {
+        return <td className="wall-right" key={`tile${tileIndex}`}></td>;
+      } else if (gameMap[rowIndex - 1][tileIndex] === '.') {
+        return <td className="wall-bottom" key={`tile${tileIndex}`}></td>;
+      } else if (gameMap[rowIndex - 1][tileIndex - 1] === '.') {
+        return <td className="corner-bottom-right" key={`tile${tileIndex}`}></td>;
+      }
+      return <td key={`tile${tileIndex}`}>{tile}</td>;
     }
 
-    return <td key={`tile${tileIndex}`}>{tile}</td>;
+    return <td className="floor" key={`tile${tileIndex}`}></td>;
   }
 
   render() {
@@ -269,15 +364,16 @@ export default class GameMap extends Component {
     const viewBoundary = this.getViewBoundary(playerPos, this.state.mapDimensions, 10);
 
     return (
+      <div>
       <table tabIndex="1" onKeyDown={this.handlePlayerMove}>
         <tbody>
-          {this.state.gameMap.map((rowArr, rowIndex) => {
+          {this.state.gameMap.map((rowArr, rowIndex, gameMap) => {
             if (rowIndex >= viewBoundary.top && rowIndex <= viewBoundary.bottom) {
               return (
                 <tr key={`row${rowIndex}`}>
                   {rowArr.map((tile, tileIndex) => {
                     if (tileIndex >= viewBoundary.left && tileIndex <= viewBoundary.right){
-                      return this.getTileType(rowIndex, tileIndex, tile);
+                      return this.getTileType(rowIndex, tileIndex, tile, gameMap);
                     }
                   })
                   }
@@ -289,6 +385,12 @@ export default class GameMap extends Component {
 
         </tbody>
       </table>
+      <PlayerInfo 
+        Health = {this.state.player.health}
+        Level = {this.state.player.level}
+        Weapon = {this.state.player.weapon.type}
+      />
+      </div>
     );
   }
 }

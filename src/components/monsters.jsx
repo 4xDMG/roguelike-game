@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 
 export class Monster extends Component {
-  constructor(location) {
+  constructor(location, level) {
     super();
 
-    this.health = 20;
+    this.level = level;
+    this.health = this.level * 20;
     this.damage = 8;
     this.location = location;
 
@@ -14,7 +15,7 @@ export class Monster extends Component {
 
   handleAttack() {
     const damage = this.damage;
-    const attackDamage = Math.round(Math.random() * damage) + 1;
+    const attackDamage = Math.round(Math.random() * damage) + this.level;
 
     return attackDamage;
   }

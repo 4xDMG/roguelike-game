@@ -1,5 +1,3 @@
-// import Monster from './monsters.jsx';
-
 export function placePlayer(arr, x, y, tile) {
   if (arr[x][y] === tile) return { x, y };
 
