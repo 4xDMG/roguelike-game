@@ -35,83 +35,64 @@ table {
 table, tbody {
   border: 0;
   padding: 0;
-  margin: 0;
+  margin: 0 auto;
+  margin-top: 20px;
 }
 
 td {
   border: 0;
   margin: 0;
-  height: 40px;
-  width: 40px;
+  height: 30px;
+  width: 30px;
   padding: 0;
 }
 
 .floor {
   background-image: url("./images/floor-small.png");
   background-size: cover;
-  max-width: 30;
-  height: auto;
 }
 
 .wall-top {
   background-image: url("./images/wall-texture-top.png");
   background-size: cover;
-  max-width: 30;
-  height: auto;
 }
 
 .wall-top-border {
   background-image: url("./images/wall-top.png");
   background-size: cover;
-  max-width: 30;
-  height: auto;
 }
 
 .wall-left {
   background-image: url("./images/wall-left.png");
   background-size: cover;
-  max-width: 30;
-  height: auto;
 }
 
 .wall-right {
   background-image: url("./images/wall-right.png");
   background-size: cover;
-  max-width: 30;
-  height: auto;
 }
 
 .wall-bottom {
   background-image: url("./images/wall-bottom.png");
   background-size: cover;
-  max-width: 30;
-  height: auto;
 }
 
 .corner-bottom-left {
   background-image: url("./images/corner-bottom-left.png");
   background-size: cover;
-  max-width: 30;
-  height: auto;
 }
 
 .corner-bottom-right {
   background-image: url("./images/corner-bottom-right.png");
   background-size: cover;
-  max-width: 30;
-  height: auto;
 }
 
 .corner-top-left {
   background-image: url("./images/corner-top-left.png");
   background-size: cover;
-  max-width: 30;
-  height: auto;
 }
 
 .corner-top-right {
   background-image: url("./images/corner-top-right.png");
   background-size: cover;
-  max-width: 30;
-  height: auto;
 }
