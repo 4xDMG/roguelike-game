@@ -5,7 +5,7 @@ export class Monster extends Component {
     super();
 
     this.level = level;
-    this.health = this.level * 20;
+    this.health = level * 20;
     this.damage = 8;
     this.location = location;
 
@@ -33,9 +33,9 @@ export class Monster extends Component {
 
   render() {
     if (this.health > 0) {
-      return <td>M</td>;
+      return <td className="floor">M</td>;
     }
-    return <td>.</td>;
+    return <td className="floor">.</td>;
   }
 }
 

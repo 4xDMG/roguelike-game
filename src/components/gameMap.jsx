@@ -88,7 +88,7 @@ export default class GameMap extends Component {
     const monsters = [];
     for (let i = 0; i < 5; i += 1) {
       const location = placeMonster(gameMapArr, mapDimensions, '.');
-      const monster = new Monster(location);
+      const monster = new Monster(location, currentLevel + 1);
       monsters.push(monster);
     }
 
