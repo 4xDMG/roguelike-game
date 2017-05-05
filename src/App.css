@@ -42,8 +42,8 @@ table, tbody {
 td {
   border: 0;
   margin: 0;
-  height: 30px;
-  width: 30px;
+  height: 40px;
+  width: 40px;
   padding: 0;
 }
 
@@ -123,4 +123,9 @@ td {
 
 .double-corner-left {
   background-image: url("./images/corner-top-left.png"), url("./images/corner-bottom-left.png");
+}
+
+.entity {
+  max-height: 35px;
+  width: auto;
 }

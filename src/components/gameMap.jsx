@@ -6,6 +6,7 @@ import { placePlayer, placeEntity, placeMonster, placeBoss } from './placeGameEn
 import Potion from './items';
 import { Monster, Boss } from './monsters';
 import PlayerInfo from './playerInfo';
+import heroFrontStill from '../images/hero-right-still.png';
 
 export default class GameMap extends Component {
   constructor(props) {
@@ -326,7 +327,7 @@ export default class GameMap extends Component {
     let monsterIndex = 0;
 
     if (_.isEqual(playerPos, currentPos)) {
-      return <td>@</td>;
+      return <td className="floor"><img src={heroFrontStill} className="entity" /></td>;
     } else if (_.find(potionPos, currentPos)) {
       return <Potion key={`Potion${tileIndex}`} />;
     } else if (_.isEqual(boss.location, currentPos)) {
