@@ -53,69 +53,74 @@ td {
 }
 
 .wall-top {
-  background: url("./images/wall-texture-top.png") ;
-  background-size: cover;
+  background-image: url("./images/wall-texture-top.png") ;
 }
 
 .wall-top-border {
-  background: #000000 url("./images/wall-top.png");
-  background-size: cover;
+  background-image: url("./images/wall-top.png");
 }
 
 .wall-left {
-  background: #000000 url("./images/wall-left.png");
-  background-size: cover;
+  background-image: url("./images/wall-left.png");
 }
 
 .wall-right {
-  background: #000000 url("./images/wall-right.png");
-  background-size: cover;
+  background-image: url("./images/wall-right.png");
 }
 
 .wall-bottom {
-  background: #000000 url("./images/wall-bottom.png");
-  background-size: cover;
+  background-image: url("./images/wall-bottom.png");
 }
 
 .corner-bottom-left {
   background-image: url("./images/corner-bottom-left.png");
-  background-size: cover;
 }
 
 .corner-bottom-right {
   background-image: url("./images/corner-bottom-right.png");
-  background-size: cover;
 }
 
 .corner-top-left {
   background-image: url("./images/corner-top-left.png");
-  background-size: cover;
 }
 
 .corner-top-right {
   background-image: url("./images/corner-top-right.png");
-  background-size: cover;
 }
 
 .corner-bottom-left-convex {
-  background: url("./images/wall-bottom.png"), url("./images/wall-left.png"), rgba(0,0,0,1);
-  background-size: cover;
+  background-image: url("./images/wall-bottom.png"), url("./images/wall-left.png");
 }
 
 .corner-bottom-right-convex {
-  background: url("./images/wall-bottom.png"), url("./images/wall-right.png"), rgba(0,0,0,1);
-  background-size: cover;
+  background-image: url("./images/wall-bottom.png"), url("./images/wall-right.png");
 }
 
 .corner-top-left-convex {
-  background-color: #000000;
   background-image: url("./images/wall-top.png"), url("./images/wall-left.png");
-  background-size: cover;
 }
 
 .corner-top-right-convex {
-  background-color: #000000;
   background-image: url("./images/wall-top.png"), url("./images/wall-right.png");
+}
+
+.wall {
+  background-color: #000000;
   background-size: cover;
 }
 
+.solo-wall-left {
+  background-image: url("./images/wall-bottom.png"), url("./images/wall-left.png"), url("./images/wall-top.png");
+}
+
+.solo-wall-right {
+  background-image: url("./images/wall-bottom.png"), url("./images/wall-right.png"), url("./images/wall-top.png");
+}
+
+.double-corner-right {
+  background-image: url("./images/corner-top-right.png"), url("./images/corner-bottom-right.png");
+}
+
+.double-corner-left {
+  background-image: url("./images/corner-top-left.png"), url("./images/corner-bottom-left.png");
+}
