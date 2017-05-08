@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
-import BuildGameMap from './generateGameMap';
+import MapGenerator from './generateGameMap';
 import Player from './player';
 import { placePlayer, placeEntity, placeMonster, placeBoss } from './placeGameEntities';
 import Potion from './items';
@@ -67,7 +67,7 @@ export default class GameMap extends Component {
   componentWillMount() {
     // Build a new Map.
     const mapDimensions = this.state.mapDimensions;
-    const gameMapArr = BuildGameMap(mapDimensions);
+    const gameMapArr = MapGenerator.BuildGameMap(mapDimensions);
     const currentLevel = this.state.currentLevel;
     this.setState({ currentLevel: currentLevel + 1 });
 
@@ -226,7 +226,9 @@ export default class GameMap extends Component {
     if (_.isEqual(newPlayerPos, weapon.location)) {
       const player = this.state.player;
       player.weapon = weapon;
+      weapon.location = { x: -1, y: -1 };
       this.setState({ player });
+      this.setState({ weapon });
     }
 
     const boss = this.state.boss;
