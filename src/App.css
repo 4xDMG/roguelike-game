@@ -4,7 +4,7 @@
 
 .App-header {
   background-color: #222;
-  height: 150px;
+  height: 50px;
   padding: 20px;
   color: white;
 }
@@ -32,8 +32,8 @@ table, tbody {
 td {
   border: 0;
   margin: 0;
-  height: 40px;
-  width: 40px;
+  height: 60px;
+  width: 60px;
   padding: 0;
 }
 
@@ -116,6 +116,6 @@ td {
 }
 
 .entity {
-  max-height: 35px;
+  max-height: 50px;
   width: auto;
 }

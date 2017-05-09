@@ -6,7 +6,10 @@ import { placePlayer, placeEntity, placeMonster, placeBoss } from './placeGameEn
 import Potion from './items';
 import { Monster, Boss } from './monsters';
 import PlayerInfo from './playerInfo';
-import heroFrontStill from '../images/hero/hero-right-still.png';
+import heroFrontStill from '../images/hero/hero-front-still.png';
+import heroRightStill from '../images/hero/hero-right-still.png';
+import heroLeftStill from '../images/hero/hero-left-still.png';
+import heroBackStill from '../images/hero/hero-back-still.png';
 
 export default class GameMap extends Component {
   constructor(props) {
@@ -28,6 +31,7 @@ export default class GameMap extends Component {
           type: 'empty',
           damage: 4,
         },
+        image: heroFrontStill,
       },
       potionPos: [],
       monsters: [],
@@ -119,6 +123,7 @@ export default class GameMap extends Component {
         if (this.checkPlayerMove('x', 'up')) {
           player.location.x = playerX - 1;
           player.location.y = playerY;
+          player.image = heroBackStill;
           this.setState({ player });
         }
         break;
@@ -130,6 +135,7 @@ export default class GameMap extends Component {
         if (this.checkPlayerMove('x', 'down')) {
           player.location.x = playerX + 1;
           player.location.y = playerY;
+          player.image = heroFrontStill;
           this.setState({ player });
         }
         break;
@@ -141,6 +147,7 @@ export default class GameMap extends Component {
         if (this.checkPlayerMove('y', 'left')) {
           player.location.x = playerX;
           player.location.y = playerY - 1;
+          player.image = heroLeftStill;
           this.setState({ player });
         }
         break;
@@ -152,6 +159,7 @@ export default class GameMap extends Component {
         if (this.checkPlayerMove('y', 'right')) {
           player.location.x = playerX;
           player.location.y = playerY + 1;
+          player.image = heroRightStill;
           this.setState({ player });
         }
         break;
@@ -329,7 +337,7 @@ export default class GameMap extends Component {
     let monsterIndex = 0;
 
     if (_.isEqual(playerPos, currentPos)) {
-      return <td className="floor"><img src={heroFrontStill} className="entity" /></td>;
+      return <td className="floor"><img src={this.state.player.image} className="entity" /></td>;
     } else if (_.find(potionPos, currentPos)) {
       return <Potion key={`Potion${tileIndex}`} />;
     } else if (_.isEqual(boss.location, currentPos)) {
@@ -458,7 +466,7 @@ export default class GameMap extends Component {
 
   render() {
     const playerPos = this.state.player.location;
-    const viewBoundary = this.getViewBoundary(playerPos, this.state.mapDimensions, 7);
+    const viewBoundary = this.getViewBoundary(playerPos, this.state.mapDimensions, 5);
 
     return (
       <div>
