@@ -38,60 +38,60 @@ td {
 }
 
 .floor {
-  background-image: url("./images/floor-small.png");
+  background-image: url("./images/tiles/floor-small.png");
   background-size: cover;
 }
 
 .wall-top {
-  background-image: url("./images/wall-texture-top.png") ;
+  background-image: url("./images/tiles/wall-texture-top.png") ;
 }
 
 .wall-top-border {
-  background-image: url("./images/wall-top.png");
+  background-image: url("./images/tiles/wall-top.png");
 }
 
 .wall-left {
-  background-image: url("./images/wall-left.png");
+  background-image: url("./images/tiles/wall-left.png");
 }
 
 .wall-right {
-  background-image: url("./images/wall-right.png");
+  background-image: url("./images/tiles/wall-right.png");
 }
 
 .wall-bottom {
-  background-image: url("./images/wall-bottom.png");
+  background-image: url("./images/tiles/wall-bottom.png");
 }
 
 .corner-bottom-left {
-  background-image: url("./images/corner-bottom-left.png");
+  background-image: url("./images/tiles/corner-bottom-left.png");
 }
 
 .corner-bottom-right {
-  background-image: url("./images/corner-bottom-right.png");
+  background-image: url("./images/tiles/corner-bottom-right.png");
 }
 
 .corner-top-left {
-  background-image: url("./images/corner-top-left.png");
+  background-image: url("./images/tiles/corner-top-left.png");
 }
 
 .corner-top-right {
-  background-image: url("./images/corner-top-right.png");
+  background-image: url("./images/tiles/corner-top-right.png");
 }
 
 .corner-bottom-left-convex {
-  background-image: url("./images/wall-bottom.png"), url("./images/wall-left.png");
+  background-image: url("./images/tiles/wall-bottom.png"), url("./images/tiles/wall-left.png");
 }
 
 .corner-bottom-right-convex {
-  background-image: url("./images/wall-bottom.png"), url("./images/wall-right.png");
+  background-image: url("./images/tiles/wall-bottom.png"), url("./images/tiles/wall-right.png");
 }
 
 .corner-top-left-convex {
-  background-image: url("./images/wall-top.png"), url("./images/wall-left.png");
+  background-image: url("./images/tiles/wall-top.png"), url("./images/tiles/wall-left.png");
 }
 
 .corner-top-right-convex {
-  background-image: url("./images/wall-top.png"), url("./images/wall-right.png");
+  background-image: url("./images/tiles/wall-top.png"), url("./images/tiles/wall-right.png");
 }
 
 .wall {
@@ -100,19 +100,19 @@ td {
 }
 
 .solo-wall-left {
-  background-image: url("./images/wall-bottom.png"), url("./images/wall-left.png"), url("./images/wall-top.png");
+  background-image: url("./images/tiles/wall-bottom.png"), url("./images/tiles/wall-left.png"), url("./images/tiles/wall-top.png");
 }
 
 .solo-wall-right {
-  background-image: url("./images/wall-bottom.png"), url("./images/wall-right.png"), url("./images/wall-top.png");
+  background-image: url("./images/tiles/wall-bottom.png"), url("./images/tiles/wall-right.png"), url("./images/tiles/wall-top.png");
 }
 
 .double-corner-right {
-  background-image: url("./images/corner-top-right.png"), url("./images/corner-bottom-right.png");
+  background-image: url("./images/tiles/corner-top-right.png"), url("./images/tiles/corner-bottom-right.png");
 }
 
 .double-corner-left {
-  background-image: url("./images/corner-top-left.png"), url("./images/corner-bottom-left.png");
+  background-image: url("./images/tiles/corner-top-left.png"), url("./images/tiles/corner-bottom-left.png");
 }
 
 .entity {

@@ -6,7 +6,7 @@ import { placePlayer, placeEntity, placeMonster, placeBoss } from './placeGameEn
 import Potion from './items';
 import { Monster, Boss } from './monsters';
 import PlayerInfo from './playerInfo';
-import heroFrontStill from '../images/hero-right-still.png';
+import heroFrontStill from '../images/hero/hero-right-still.png';
 
 export default class GameMap extends Component {
   constructor(props) {

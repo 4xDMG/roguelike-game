@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Boss1 from '../images/monsters/boss/boss1.png';
 
 export class Monster extends Component {
   constructor(location, level) {
@@ -8,6 +9,7 @@ export class Monster extends Component {
     this.health = level * 20;
     this.damage = 8;
     this.location = location;
+    this.image = null;
 
     this.handleAttack = this.handleAttack.bind(this);
     this.handleDefence = this.handleDefence.bind(this);
@@ -40,5 +42,5 @@ export class Monster extends Component {
 }
 
 export function Boss() {
-  return <td>B</td>;
+  return <td className="floor"><img src={Boss1} className="entity" /></td>;
 }
