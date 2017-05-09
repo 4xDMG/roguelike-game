@@ -10,6 +10,9 @@ import heroFrontStill from '../images/hero/hero-front-still.png';
 import heroRightStill from '../images/hero/hero-right-still.png';
 import heroLeftStill from '../images/hero/hero-left-still.png';
 import heroBackStill from '../images/hero/hero-back-still.png';
+import officeScissors from '../images/weapons/office-scissors.png';
+import rustyShears from '../images/weapons/rusty-shears.png';
+import badassScissors from '../images/weapons/badass-scissors.png';
 
 export default class GameMap extends Component {
   constructor(props) {
@@ -38,28 +41,31 @@ export default class GameMap extends Component {
       boss: {},
       weapons: [
         {
-          type: 'short sword',
+          type: 'office scissors',
           damage: 8,
           location: {
             x: 0,
             y: 0,
           },
+          image: officeScissors,
         },
         {
-          type: 'long sword',
+          type: 'rusty shears',
           damage: 12,
           location: {
             x: 0,
             y: 0,
           },
+          image: rustyShears,
         },
         {
-          type: 'battle axe',
+          type: 'badass scissors',
           damage: 15,
           location: {
             x: 0,
             y: 0,
           },
+          image: badassScissors,
         },
       ],
     };
@@ -348,7 +354,7 @@ export default class GameMap extends Component {
     })) {
       return monsters[monsterIndex].render();
     } else if (_.isEqual(weapon.location, currentPos)) {
-      return 'W';
+      return <td className="floor"><img src={weapon.image} className="entity" /></td>;
     } else if (tile === '#') {
       // This section handles walls with only one neighbour.
       if (Array.isArray(gameMap[rowIndex + 2]) && Array.isArray(gameMap[rowIndex - 1])) {
