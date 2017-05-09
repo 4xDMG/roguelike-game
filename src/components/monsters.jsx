@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Boss1 from '../images/monsters/boss/boss1.png';
+import Monster1Lvl1 from '../images/monsters/monsters-level-1/monster-lvl1-1.png';
 
 export class Monster extends Component {
   constructor(location, level) {
@@ -9,7 +10,7 @@ export class Monster extends Component {
     this.health = level * 20;
     this.damage = 8;
     this.location = location;
-    this.image = null;
+    this.image = Monster1Lvl1;
 
     this.handleAttack = this.handleAttack.bind(this);
     this.handleDefence = this.handleDefence.bind(this);
@@ -35,9 +36,9 @@ export class Monster extends Component {
 
   render() {
     if (this.health > 0) {
-      return <td className="floor">M</td>;
+      return <td className="floor"><img src={Monster1Lvl1} className="entity" /></td>;
     }
-    return <td className="floor">.</td>;
+    return <td className="floor"></td>;
   }
 }
 
