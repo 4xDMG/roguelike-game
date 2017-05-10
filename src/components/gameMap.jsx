@@ -111,6 +111,8 @@ export default class GameMap extends Component {
     const bossLoc = placeBoss(gameMapArr, mapDimensions, '.');
     const boss = new Monster(bossLoc, currentLevel + 2);
     this.setState({ boss });
+
+    document.addEventListener('keydown', this.handlePlayerMove);
   }
 
   handlePlayerMove(event) {
@@ -476,7 +478,7 @@ export default class GameMap extends Component {
 
     return (
       <div>
-        <table tabIndex="1" onKeyDown={this.handlePlayerMove}>
+        <table>
           <tbody>
             {this.state.gameMap.map((rowArr, rowIndex, gameMap) => {
               if (rowIndex >= viewBoundary.top && rowIndex <= viewBoundary.bottom) {
