@@ -13,6 +13,15 @@ import heroBackStill from '../images/hero/hero-back-still.png';
 import officeScissors from '../images/weapons/office-scissors.png';
 import rustyShears from '../images/weapons/rusty-shears.png';
 import badassScissors from '../images/weapons/badass-scissors.png';
+import wallBottom from '../images/tiles/wall-bottom.png';
+import wallLeft from '../images/tiles/wall-left.png';
+import wallRight from '../images/tiles/wall-right.png';
+import wallTop from '../images/tiles/wall-top.png';
+import wallTextureTop from '../images/tiles/wall-texture-top.png';
+import cornerTopLeft from '../images/tiles/corner-top-left.png';
+import cornerTopRight from '../images/tiles/corner-top-right.png';
+import cornerBottomLeft from '../images/tiles/corner-bottom-left.png';
+import cornerBottomRight from '../images/tiles/corner-bottom-right.png';
 
 export default class GameMap extends Component {
   constructor(props) {
@@ -358,115 +367,95 @@ export default class GameMap extends Component {
     } else if (_.isEqual(weapon.location, currentPos)) {
       return <td className="floor"><img src={weapon.image} className="entity" /></td>;
     } else if (tile === '#') {
-      // This section handles walls with only one neighbour.
-      if (Array.isArray(gameMap[rowIndex + 2]) && Array.isArray(gameMap[rowIndex - 1])) {
-        if (gameMap[rowIndex + 2][tileIndex] === '.' && gameMap[rowIndex - 1][tileIndex] === '.') {
-          if (gameMap[rowIndex][tileIndex + 1] === '.' && gameMap[rowIndex][tileIndex - 1] === '#') {
-            return <td className="wall solo-wall-left" />;
-          } else if (gameMap[rowIndex][tileIndex - 1] === '.' && gameMap[rowIndex][tileIndex + 1] === '#') {
-            return <td className="wall solo-wall-right" />;
-          }
-        }
-      }
+      const wallImages = [];
 
-      // This section handles double corners.
-      if (Array.isArray(gameMap[rowIndex + 2]) && Array.isArray(gameMap[rowIndex - 1])) {
-        if (gameMap[rowIndex + 1][tileIndex] === '#' && gameMap[rowIndex - 1][tileIndex] === '#') {
-          if (gameMap[rowIndex][tileIndex - 1] === '#' && gameMap[rowIndex][tileIndex - 2] === '.') {
-            if (gameMap[rowIndex - 1][tileIndex - 1] === '.' && gameMap[rowIndex + 2][tileIndex - 1] === '.') {
-              return <td className="wall double-corner-right" />;
-            }
-          } else if (gameMap[rowIndex][tileIndex + 1] === '#' && gameMap[rowIndex][tileIndex + 2] === '.') {
-            if (gameMap[rowIndex - 1][tileIndex + 1] === '.' && gameMap[rowIndex + 2][tileIndex + 1] === '.') {
-              return <td className="wall double-corner-left" />;
-            }
-          }
-        }
-      }
-
-
-      // This section handles top-left and top-right corners.
-      if (Array.isArray(gameMap[rowIndex + 1]) && Array.isArray(gameMap[rowIndex + 2])) {
-        if (gameMap[rowIndex + 1][tileIndex] === '#') {
-          // Handles convex corners.
-          if (gameMap[rowIndex + 2][tileIndex] === '.') {
-            if (gameMap[rowIndex + 1][tileIndex + 1] === '.') {
-              return <td className="wall corner-top-left-convex" />;
-            } else if (gameMap[rowIndex + 1][tileIndex - 1] === '.') {
-              return <td className="wall corner-top-right-convex" />;
-            }
-          // Handles concave corners.
-          } else if (gameMap[rowIndex][tileIndex + 1] === '#' && gameMap[rowIndex + 2][tileIndex + 1] === '.') {
-            if (gameMap[rowIndex + 1][tileIndex + 1] === '#') {
-              return <td className="wall corner-top-left" />;
-            }
-            return <td className="wall wall-left" />;
-          } else if (gameMap[rowIndex][tileIndex - 1] === '#' && gameMap[rowIndex + 2][tileIndex - 1] === '.') {
-            if (gameMap[rowIndex + 1][tileIndex - 1] === '#') {
-              return <td className="wall corner-top-right" />;
-            }
-            return <td className="wall wall-right" />;
-          }
-        }
-      }
-
-      // This section handles bottom corners
-      if (Array.isArray(gameMap[rowIndex - 1]) && Array.isArray(gameMap[rowIndex - 2])) {
-        if (gameMap[rowIndex - 1][tileIndex] === '.') {
-          // Handles convex corners.
-          if (gameMap[rowIndex][tileIndex + 1] === '.') {
-            return <td className="wall corner-bottom-left-convex" />;
-          } else if (gameMap[rowIndex][tileIndex - 1] === '.') {
-            return <td className="wall corner-bottom-right-convex" />;
-          }
-          // Handles concave corners.
-        } else if (gameMap[rowIndex][tileIndex + 1] === '#' && gameMap[rowIndex - 1][tileIndex + 1] === '.') {
-          if (gameMap[rowIndex - 1][tileIndex] === '#') {
-            return <td className="wall corner-bottom-left" />;
-          }
-          return <td className="wall wall-left" />;
-        } else if (gameMap[rowIndex][tileIndex - 1] === '#' && gameMap[rowIndex - 1][tileIndex - 1] === '.') {
-          if (gameMap[rowIndex][tileIndex - 1] === '#') {
-            return <td className="wall corner-bottom-right" />;
-          }
-          return <td className="wall wall-right" />;
-        }
-      }
-
-      // This section handles top wall graphics.
-      // Check if following row is an array.
+      // Handles pseudo-3D wall tile for top edges of floor space.
       if (Array.isArray(gameMap[rowIndex + 1])) {
-        // If tile in next array is floor make this tile a wall-top texture.
         if (gameMap[rowIndex + 1][tileIndex] === '.') {
-          return <td className="wall wall-top" />;
+          wallImages.push(wallTextureTop);
         }
-        // Check if two rows down is an array.
-        if (Array.isArray(gameMap[rowIndex + 2])) {
-          // If tile two rows away is floor make this tile a wall-top-border.
-          if (gameMap[rowIndex + 2][tileIndex] === '.') {
-            return <td className="wall wall-top-border" />;
+      }
+
+      // Handles top wall borders
+      if (Array.isArray(gameMap[rowIndex + 2])) {
+        if (gameMap[rowIndex + 2][tileIndex] === '.' && gameMap[rowIndex + 1][tileIndex] === '#') {
+          wallImages.push(wallTop);
+        }
+
+        if (gameMap[rowIndex][tileIndex + 1]) {
+          if (gameMap[rowIndex + 1][tileIndex + 1] === '.' && gameMap[rowIndex + 1][tileIndex] === '#') {
+            wallImages.push(wallLeft);
+          }
+
+          if (gameMap[rowIndex + 2][tileIndex] === '#') {
+            if (gameMap[rowIndex + 2][tileIndex + 1] === '.' && gameMap[rowIndex + 1][tileIndex + 1] === '#') {
+              wallImages.push(cornerTopLeft);
+            }
+          }
+        }
+
+        if (gameMap[rowIndex][tileIndex - 1]) {
+          if (gameMap[rowIndex + 1][tileIndex - 1] === '.' && gameMap[rowIndex + 1][tileIndex] === '#') {
+            wallImages.push(wallRight);
+          }
+
+          if (gameMap[rowIndex + 2][tileIndex] === '#') {
+            if (gameMap[rowIndex + 2][tileIndex - 1] === '.' && gameMap[rowIndex + 1][tileIndex - 1] === '#') {
+              wallImages.push(cornerTopRight);
+            }
           }
         }
       }
 
-      // This section handles left wall graphics.
-      if (gameMap[rowIndex][tileIndex + 1] === '.') {
-        return <td className="wall wall-left" />;
-      }
-
-      // This section handles right wall graphics.
-      if (gameMap[rowIndex][tileIndex - 1] === '.') {
-        return <td className="wall wall-right" />;
-      }
-
-      // This section handles bottom wall graphics.
+      // Handles bottom wall borders.
       if (Array.isArray(gameMap[rowIndex - 1])) {
         if (gameMap[rowIndex - 1][tileIndex] === '.') {
-          return <td className="wall wall-bottom" />;
+          wallImages.push(wallBottom);
+        }
+
+        if (gameMap[rowIndex][tileIndex + 1]) {
+          if (gameMap[rowIndex - 1][tileIndex + 1] === '.' && gameMap[rowIndex][tileIndex + 1] === '.') {
+            if (Array.isArray(gameMap[rowIndex + 1]) && gameMap[rowIndex + 1][tileIndex] === '#') {
+              wallImages.push(wallLeft);
+            }
+          }
+
+          if (gameMap[rowIndex - 1][tileIndex] === '#') {
+            if (gameMap[rowIndex][tileIndex + 1] === '#' && gameMap[rowIndex - 1][tileIndex + 1] === '.') {
+              wallImages.push(cornerBottomLeft);
+            }
+          }
+        }
+
+        if (gameMap[rowIndex][tileIndex - 1]) {
+          if (gameMap[rowIndex - 1][tileIndex - 1] === '.' && gameMap[rowIndex][tileIndex - 1] === '.') {
+            if (Array.isArray(gameMap[rowIndex + 1]) && gameMap[rowIndex + 1][tileIndex] === '#') {
+              wallImages.push(wallRight);
+            }
+          }
+
+          if (gameMap[rowIndex - 1][tileIndex] === '#') {
+            if (gameMap[rowIndex][tileIndex - 1] === '#' && gameMap[rowIndex - 1][tileIndex - 1] === '.') {
+              wallImages.push(cornerBottomRight);
+            }
+          }
         }
       }
 
-      return <td className="wall" />;
+      const wallImgStyle = {
+        position: 'absolute',
+        top: '0px',
+        left: '0px',
+        height: 60,
+        width: 60,
+      };
+
+      return (
+        <td>
+          <div className="wall">
+            {wallImages.map(wallImg => <img style={wallImgStyle} src={wallImg} />)}
+          </div>
+        </td>);
     }
 
     return <td className="floor" key={`tile${tileIndex}`} />;

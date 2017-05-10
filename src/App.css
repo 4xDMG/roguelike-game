@@ -30,6 +30,7 @@ table, tbody {
 }
 
 td {
+  position: relative;
   border: 0;
   margin: 0;
   height: 60px;
@@ -42,77 +43,12 @@ td {
   background-size: cover;
 }
 
-.wall-top {
-  background-image: url("./images/tiles/wall-texture-top.png") ;
-}
-
-.wall-top-border {
-  background-image: url("./images/tiles/wall-top.png");
-}
-
-.wall-left {
-  background-image: url("./images/tiles/wall-left.png");
-}
-
-.wall-right {
-  background-image: url("./images/tiles/wall-right.png");
-}
-
-.wall-bottom {
-  background-image: url("./images/tiles/wall-bottom.png");
-}
-
-.corner-bottom-left {
-  background-image: url("./images/tiles/corner-bottom-left.png");
-}
-
-.corner-bottom-right {
-  background-image: url("./images/tiles/corner-bottom-right.png");
-}
-
-.corner-top-left {
-  background-image: url("./images/tiles/corner-top-left.png");
-}
-
-.corner-top-right {
-  background-image: url("./images/tiles/corner-top-right.png");
-}
-
-.corner-bottom-left-convex {
-  background-image: url("./images/tiles/wall-bottom.png"), url("./images/tiles/wall-left.png");
-}
-
-.corner-bottom-right-convex {
-  background-image: url("./images/tiles/wall-bottom.png"), url("./images/tiles/wall-right.png");
-}
-
-.corner-top-left-convex {
-  background-image: url("./images/tiles/wall-top.png"), url("./images/tiles/wall-left.png");
-}
-
-.corner-top-right-convex {
-  background-image: url("./images/tiles/wall-top.png"), url("./images/tiles/wall-right.png");
-}
-
 .wall {
+  position: relative;
+  height: 100%;
+  width: 100%;
   background-color: #000000;
   background-size: cover;
-}
-
-.solo-wall-left {
-  background-image: url("./images/tiles/wall-bottom.png"), url("./images/tiles/wall-left.png"), url("./images/tiles/wall-top.png");
-}
-
-.solo-wall-right {
-  background-image: url("./images/tiles/wall-bottom.png"), url("./images/tiles/wall-right.png"), url("./images/tiles/wall-top.png");
-}
-
-.double-corner-right {
-  background-image: url("./images/tiles/corner-top-right.png"), url("./images/tiles/corner-bottom-right.png");
-}
-
-.double-corner-left {
-  background-image: url("./images/tiles/corner-top-left.png"), url("./images/tiles/corner-bottom-left.png");
 }
 
 .entity {
