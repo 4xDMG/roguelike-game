@@ -40,7 +40,7 @@ export default class GameMap extends Component {
         level: 1,
         xp: 0,
         weapon: {
-          type: 'empty',
+          type: 'blunt scissors',
           damage: 4,
         },
         image: heroFrontStill,
@@ -489,7 +489,7 @@ export default class GameMap extends Component {
         <PlayerInfo
           Health={this.state.player.health}
           Level={this.state.player.level}
-          Weapon={this.state.player.weapon.type}
+          Weapon={this.state.player.weapon}
         />
       </div>
     );
