@@ -31,6 +31,8 @@ export default class GameMap extends Component {
       mapDimensions: props.MapDimensions,
       currentLevel: 0,
       gameMap: [],
+      gameWon: false,
+      gameLost: false,
       player: {
         location: {
           x: 0,
@@ -209,6 +211,7 @@ export default class GameMap extends Component {
       player.health -= monsterDamage;
       // Check if Player survived combat.
       if (!Player.isAlive(player.health)) {
+        this.setState({ gameLost: true });
         alert('you lose!');
       }
       // If Player defeated Monster give Player xp.
@@ -264,10 +267,7 @@ export default class GameMap extends Component {
 
       boss.handleDefence(playerDamage);
       player.health -= bossDamage;
-      // Check if Player survived combat.
-      if (!Player.isAlive(player.health)) {
-        alert('you lose!');
-      }
+
       // If Player defeated Monster give Player xp.
       if (!boss.isAlive()) {
         const newXp = Player.handleXp(player.xp, player.level, 200);
@@ -276,7 +276,17 @@ export default class GameMap extends Component {
         }
         player.xp = newXp.xp;
         boss.location = 0;
+        this.setState({ gameWon: true });
+        alert('you win!');
+        return true;
       }
+
+      // Check if Player survived combat.
+      if (!Player.isAlive(player.health)) {
+        this.setState({ gameLost: true });
+        alert('you lose!');
+      }
+      
 
       this.setState({ boss });
       this.setState({ player });
@@ -464,6 +474,22 @@ export default class GameMap extends Component {
   render() {
     const playerPos = this.state.player.location;
     const viewBoundary = this.getViewBoundary(playerPos, this.state.mapDimensions, 5);
+
+    if (this.state.gameLost) {
+      return (
+        <div className="game-lost">
+          <h2>You Lose!!</h2>
+        </div>
+      );
+    }
+
+    if (this.state.gameWon) {
+      return (
+        <div className="game-win">
+          <h2>You Win!!</h2>
+        </div>
+      );
+    }
 
     return (
       <div>
