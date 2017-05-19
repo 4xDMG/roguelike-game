@@ -84,8 +84,14 @@ const MapGenerator = (function generateMapAPI() {
     return newMap;
   }
 
-  /* Compares maps and recursively generates a new one
-     if they are not equal. */
+  /**
+   * Compares maps and recursively generates a new one
+   * if they are not equal.
+   * @param {Array} oldMap
+   * @param {Array} newMap
+   * @param {Number} generations
+   * @returns {Array} newMap
+   */
   function normalizeMapArr(oldMap, newMap, generations) {
     /* Check if map has finished generating and return
        the finsihed map. */
@@ -98,18 +104,30 @@ const MapGenerator = (function generateMapAPI() {
     return normalizeMapArr(tempOldMap, tempNewMap, generations + 1);
   }
 
+  /**
+   * Gets random coordinates that are equal to a non-wall
+   * tile as a start point for the flood fill.
+   * @param {Object} mapDimensions
+   * @param {Array} gameMap
+   * @returns {Object} randomCoords
+   */
   function getRandomCoords(mapDimensions, gameMap) {
-    const randomCoords = {};
-    randomCoords.x = Math.floor(Math.random() * mapDimensions.height);
-    randomCoords.y = Math.floor(Math.random() * mapDimensions.width);
-
-    if (gameMap[randomCoords.x][randomCoords.y] === '#') {
-      getRandomCoords(mapDimensions, gameMap);
+    const randomCoords = { x: 0, y: 0 };
+    while (gameMap[randomCoords.x][randomCoords.y] === '#') {
+      randomCoords.x = Math.floor(Math.random() * mapDimensions.height);
+      randomCoords.y = Math.floor(Math.random() * mapDimensions.width);
     }
 
     return randomCoords;
   }
 
+  /**
+   * Uses a flood fill algorithm to convert a continuous
+   * section of 'F' tiles into floor tiles ('.').
+   * @param {Array} gameMap
+   * @param {Number} x
+   * @param {Number} y
+   */
   function floodFill(gameMap, x, y) {
     if (gameMap[x][y] === 'F') {
       gameMap[x][y] = '.';
@@ -120,6 +138,13 @@ const MapGenerator = (function generateMapAPI() {
     }
   }
 
+  /**
+   * Counts the amount of floor tiles a map contains and
+   * mutates gameMap to fill in any tiles not converted by
+   * the flood fill.
+   * @param {Array} gameMap
+   * @returns {Number} count
+   */
   function checkMapSize(gameMap) {
     let count = 0;
     gameMap.forEach((row, x) => {
@@ -134,6 +159,13 @@ const MapGenerator = (function generateMapAPI() {
     return count;
   }
 
+  /**
+   * Generates a 2d array to be used as the seed for the
+   * procedural generation of the game map.
+   * @param {Number} height
+   * @param {Number} width
+   * @returns {Array} mapArray
+   */
   function generateMapSeed(height, width) {
     const mapArray = [];
 
