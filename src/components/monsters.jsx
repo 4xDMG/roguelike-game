@@ -36,12 +36,20 @@ export class Monster extends Component {
 
   render() {
     if (this.health > 0) {
-      return <td className="floor"><img src={Monster1Lvl1} className="entity" /></td>;
+      return (
+        <td className="floor">
+          <img src={Monster1Lvl1} className="entity" alt="" />
+        </td>
+      );
     }
-    return <td className="floor"></td>;
+    return <td className="floor" />;
   }
 }
 
 export function Boss() {
-  return <td className="floor"><img src={Boss1} className="entity" /></td>;
+  return (
+    <td className="floor">
+      <img src={Boss1} className="entity" alt="" />
+    </td>
+  );
 }

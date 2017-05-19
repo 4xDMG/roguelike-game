@@ -154,7 +154,6 @@ export default class GameMap extends Component {
       // Check if Player survived combat.
       if (!Player.isAlive(player.health)) {
         this.setState({ gameLost: true });
-        alert('you lose!');
       }
       // If Player defeated Monster give Player xp.
       if (!monsters[monsterIndex].isAlive()) {
@@ -219,16 +218,13 @@ export default class GameMap extends Component {
         player.xp = newXp.xp;
         boss.location = 0;
         this.setState({ gameWon: true });
-        alert('you win!');
         return true;
       }
 
       // Check if Player survived combat.
       if (!Player.isAlive(player.health)) {
         this.setState({ gameLost: true });
-        alert('you lose!');
       }
-      
 
       this.setState({ boss });
       this.setState({ player });
