@@ -1,8 +1,13 @@
 import _ from 'lodash';
 
 const MapGenerator = (function generateMapAPI() {
-  /* Uses cellular automata rules to generate a new
-   map with a more 'natural' appearance */
+  /**
+   * Uses cellular automata rules to generate a new
+   * map with a more 'natural' appearance.
+   * @param {Array} oldMap
+   * @param {Number} generations
+   * @returns {Array} newMap
+   */
   function generateNewMap(oldMap, generations) {
     const newMap = [];
 
@@ -184,6 +189,12 @@ const MapGenerator = (function generateMapAPI() {
   }
 
   return {
+    /**
+     * Public function that controls the generation of
+     * a new map.
+     * @param {Object} mapDimensions
+     * @returns {Array} gameMap
+     */
     BuildGameMap: function buildGameMap(mapDimensions) {
       const minSize = Math.floor(mapDimensions.height * mapDimensions.width * 0.45);
       const mapSeed = generateMapSeed(mapDimensions.height, mapDimensions.width);

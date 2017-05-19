@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
-import MapGenerator from './generateGameMap';
+import MapGenerator from '../helpers/generateGameMap';
 import Player from './player';
 import { placePlayer, placeEntity, placeMonster, placeBoss } from './placeGameEntities';
 import Potion from './items';
 import { Monster, Boss } from './monsters';
 import PlayerInfo from './playerInfo';
+import getViewBoundary from '../helpers/viewHelpers';
 import heroFrontStill from '../images/hero/hero-front-still.png';
 import heroRightStill from '../images/hero/hero-right-still.png';
 import heroLeftStill from '../images/hero/hero-left-still.png';
@@ -30,6 +31,8 @@ export default class GameMap extends Component {
     this.state = {
       mapDimensions: props.MapDimensions,
       currentLevel: 0,
+      monsterCount: 5,
+      potionCount: 4,
       gameMap: [],
       gameWon: false,
       gameLost: false,
@@ -100,14 +103,14 @@ export default class GameMap extends Component {
     this.setState({ player });
 
     const potionPos = [];
-    for (let i = 0; i < 4; i += 1) {
+    for (let i = 0; i < this.state.potionCount; i += 1) {
       potionPos.push(placeEntity(gameMapArr, mapDimensions, '.'));
     }
 
     this.setState({ potionPos });
 
     const monsters = [];
-    for (let i = 0; i < 5; i += 1) {
+    for (let i = 0; i < this.state.monsterCount; i += 1) {
       const location = placeMonster(gameMapArr, mapDimensions, '.');
       const monster = new Monster(location, currentLevel + 1);
       monsters.push(monster);
@@ -124,67 +127,6 @@ export default class GameMap extends Component {
     this.setState({ boss });
 
     document.addEventListener('keydown', this.handlePlayerMove);
-  }
-
-  handlePlayerMove(event) {
-    event.preventDefault();
-
-    const player = this.state.player;
-    const playerX = this.state.player.location.x;
-    const playerY = this.state.player.location.y;
-    // Check tile that player wants to move to and move Player
-    switch (event.key) {
-      case 'w':
-      case 'ArrowUp':
-        if (this.handleEntityCollision({ x: playerX - 1, y: playerY })) {
-          break;
-        }
-        if (this.checkPlayerMove('x', 'up')) {
-          player.location.x = playerX - 1;
-          player.location.y = playerY;
-          player.image = heroBackStill;
-          this.setState({ player });
-        }
-        break;
-      case 's':
-      case 'ArrowDown':
-        if (this.handleEntityCollision({ x: playerX + 1, y: playerY })) {
-          break;
-        }
-        if (this.checkPlayerMove('x', 'down')) {
-          player.location.x = playerX + 1;
-          player.location.y = playerY;
-          player.image = heroFrontStill;
-          this.setState({ player });
-        }
-        break;
-      case 'a':
-      case 'ArrowLeft':
-        if (this.handleEntityCollision({ x: playerX, y: playerY - 1 })) {
-          break;
-        }
-        if (this.checkPlayerMove('y', 'left')) {
-          player.location.x = playerX;
-          player.location.y = playerY - 1;
-          player.image = heroLeftStill;
-          this.setState({ player });
-        }
-        break;
-      case 'd':
-      case 'ArrowRight':
-        if (this.handleEntityCollision({ x: playerX, y: playerY + 1 })) {
-          break;
-        }
-        if (this.checkPlayerMove('y', 'right')) {
-          player.location.x = playerX;
-          player.location.y = playerY + 1;
-          player.image = heroRightStill;
-          this.setState({ player });
-        }
-        break;
-      default:
-        break;
-    }
   }
 
   handleEntityCollision(newPlayerPos) {
@@ -318,42 +260,6 @@ export default class GameMap extends Component {
     return false;
   }
 
-  // Gets a portion of the map to display.
-  getViewBoundary(player, mapDimensions, viewSize) {
-    const mapBoundaries = {};
-    mapBoundaries.top = player.x - viewSize;
-    mapBoundaries.left = player.y - viewSize;
-    mapBoundaries.bottom = player.x + viewSize;
-    mapBoundaries.right = player.y + viewSize;
-
-    if (mapBoundaries.top < 0) {
-      const excessBoundaryTop = Math.abs(mapBoundaries.top);
-      mapBoundaries.top = 0;
-      mapBoundaries.bottom += excessBoundaryTop;
-    }
-
-    if (mapBoundaries.left < 0) {
-      const excessBoundaryLeft = Math.abs(mapBoundaries.left);
-      mapBoundaries.left = 0;
-      mapBoundaries.right += excessBoundaryLeft;
-    }
-
-    if (mapBoundaries.bottom >= mapDimensions.height) {
-      const excessBoundaryBottom = Math.abs(mapBoundaries.bottom - mapDimensions.height);
-      mapBoundaries.bottom = mapDimensions.height - 1;
-      mapBoundaries.top -= excessBoundaryBottom + 1;
-    }
-
-    if (mapBoundaries.right >= mapDimensions.width) {
-      const excessBoundaryRight = Math.abs(mapBoundaries.right - mapDimensions.width);
-      mapBoundaries.right = mapDimensions.width - 1;
-      mapBoundaries.left -= excessBoundaryRight + 1;
-    }
-
-    return mapBoundaries;
-  }
-
-
   getTileType(rowIndex, tileIndex, tile, gameMap) {
     const playerPos = this.state.player.location;
     const potionPos = this.state.potionPos;
@@ -471,9 +377,71 @@ export default class GameMap extends Component {
     return <td className="floor" key={`tile${tileIndex}`} />;
   }
 
+  handlePlayerMove(event) {
+    event.preventDefault();
+
+    const player = this.state.player;
+    const playerX = this.state.player.location.x;
+    const playerY = this.state.player.location.y;
+    // Check tile that player wants to move to and move Player
+    switch (event.key) {
+      case 'w':
+      case 'ArrowUp':
+        if (this.handleEntityCollision({ x: playerX - 1, y: playerY })) {
+          break;
+        }
+        if (this.checkPlayerMove('x', 'up')) {
+          player.location.x = playerX - 1;
+          player.location.y = playerY;
+          player.image = heroBackStill;
+          this.setState({ player });
+        }
+        break;
+      case 's':
+      case 'ArrowDown':
+        if (this.handleEntityCollision({ x: playerX + 1, y: playerY })) {
+          break;
+        }
+        if (this.checkPlayerMove('x', 'down')) {
+          player.location.x = playerX + 1;
+          player.location.y = playerY;
+          player.image = heroFrontStill;
+          this.setState({ player });
+        }
+        break;
+      case 'a':
+      case 'ArrowLeft':
+        if (this.handleEntityCollision({ x: playerX, y: playerY - 1 })) {
+          break;
+        }
+        if (this.checkPlayerMove('y', 'left')) {
+          player.location.x = playerX;
+          player.location.y = playerY - 1;
+          player.image = heroLeftStill;
+          this.setState({ player });
+        }
+        break;
+      case 'd':
+      case 'ArrowRight':
+        if (this.handleEntityCollision({ x: playerX, y: playerY + 1 })) {
+          break;
+        }
+        if (this.checkPlayerMove('y', 'right')) {
+          player.location.x = playerX;
+          player.location.y = playerY + 1;
+          player.image = heroRightStill;
+          this.setState({ player });
+        }
+        break;
+      default:
+        break;
+    }
+  }
+
+
   render() {
     const playerPos = this.state.player.location;
-    const viewBoundary = this.getViewBoundary(playerPos, this.state.mapDimensions, 5);
+    const viewBoundary = getViewBoundary(playerPos, this.state.mapDimensions, 5);
 
     if (this.state.gameLost) {
       return (
