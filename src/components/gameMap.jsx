@@ -1,28 +1,34 @@
-import React, { Component } from 'react';
-import _ from 'lodash';
-import MapGenerator from '../helpers/generateGameMap';
-import Player from './player';
-import { placePlayer, placeEntity, placeMonster, placeBoss } from './placeGameEntities';
-import Potion from './items';
-import { Monster, Boss } from './monsters';
-import PlayerInfo from './playerInfo';
-import getViewBoundary from '../helpers/viewHelpers';
-import heroFrontStill from '../images/hero/hero-front-still.png';
-import heroRightStill from '../images/hero/hero-right-still.png';
-import heroLeftStill from '../images/hero/hero-left-still.png';
-import heroBackStill from '../images/hero/hero-back-still.png';
-import officeScissors from '../images/weapons/office-scissors.png';
-import rustyShears from '../images/weapons/rusty-shears.png';
-import badassScissors from '../images/weapons/badass-scissors.png';
-import wallBottom from '../images/tiles/wall-bottom.png';
-import wallLeft from '../images/tiles/wall-left.png';
-import wallRight from '../images/tiles/wall-right.png';
-import wallTop from '../images/tiles/wall-top.png';
-import wallTextureTop from '../images/tiles/wall-texture-top.png';
-import cornerTopLeft from '../images/tiles/corner-top-left.png';
-import cornerTopRight from '../images/tiles/corner-top-right.png';
-import cornerBottomLeft from '../images/tiles/corner-bottom-left.png';
-import cornerBottomRight from '../images/tiles/corner-bottom-right.png';
+import React, { Component } from "react";
+import { number, shape } from "prop-types";
+import _ from "lodash";
+import MapGenerator from "../helpers/generateGameMap";
+import Player from "./player";
+import {
+  placePlayer,
+  placeEntity,
+  placeMonster,
+  placeBoss,
+} from "./placeGameEntities";
+import Potion from "./items";
+import { Monster, Boss } from "./monsters";
+import PlayerInfo from "./playerInfo";
+import getViewBoundary from "../helpers/viewHelpers";
+import heroFrontStill from "../images/hero/hero-front-still.png";
+import heroRightStill from "../images/hero/hero-right-still.png";
+import heroLeftStill from "../images/hero/hero-left-still.png";
+import heroBackStill from "../images/hero/hero-back-still.png";
+import officeScissors from "../images/weapons/office-scissors.png";
+import rustyShears from "../images/weapons/rusty-shears.png";
+import badassScissors from "../images/weapons/badass-scissors.png";
+import wallBottom from "../images/tiles/wall-bottom.png";
+import wallLeft from "../images/tiles/wall-left.png";
+import wallRight from "../images/tiles/wall-right.png";
+import wallTop from "../images/tiles/wall-top.png";
+import wallTextureTop from "../images/tiles/wall-texture-top.png";
+import cornerTopLeft from "../images/tiles/corner-top-left.png";
+import cornerTopRight from "../images/tiles/corner-top-right.png";
+import cornerBottomLeft from "../images/tiles/corner-bottom-left.png";
+import cornerBottomRight from "../images/tiles/corner-bottom-right.png";
 
 export default class GameMap extends Component {
   constructor(props) {
@@ -45,7 +51,7 @@ export default class GameMap extends Component {
         level: 1,
         xp: 0,
         weapon: {
-          type: 'blunt scissors',
+          type: "blunt scissors",
           damage: 4,
         },
         image: heroFrontStill,
@@ -55,7 +61,7 @@ export default class GameMap extends Component {
       boss: {},
       weapons: [
         {
-          type: 'office scissors',
+          type: "office scissors",
           damage: 8,
           location: {
             x: 0,
@@ -64,7 +70,7 @@ export default class GameMap extends Component {
           image: officeScissors,
         },
         {
-          type: 'rusty shears',
+          type: "rusty shears",
           damage: 12,
           location: {
             x: 0,
@@ -73,7 +79,7 @@ export default class GameMap extends Component {
           image: rustyShears,
         },
         {
-          type: 'badass scissors',
+          type: "badass scissors",
           damage: 15,
           location: {
             x: 0,
@@ -99,19 +105,19 @@ export default class GameMap extends Component {
 
     // Initialize starting positions for entities.
     const player = this.state.player;
-    player.location = placePlayer(gameMapArr, 0, 0, '.');
+    player.location = placePlayer(gameMapArr, 0, 0, ".");
     this.setState({ player });
 
     const potionPos = [];
     for (let i = 0; i < this.state.potionCount; i += 1) {
-      potionPos.push(placeEntity(gameMapArr, mapDimensions, '.'));
+      potionPos.push(placeEntity(gameMapArr, mapDimensions, "."));
     }
 
     this.setState({ potionPos });
 
     const monsters = [];
     for (let i = 0; i < this.state.monsterCount; i += 1) {
-      const location = placeMonster(gameMapArr, mapDimensions, '.');
+      const location = placeMonster(gameMapArr, mapDimensions, ".");
       const monster = new Monster(location, currentLevel + 1);
       monsters.push(monster);
     }
@@ -119,14 +125,18 @@ export default class GameMap extends Component {
     this.setState({ monsters });
 
     const weapons = this.state.weapons;
-    weapons[currentLevel].location = placeEntity(gameMapArr, mapDimensions, '.');
+    weapons[currentLevel].location = placeEntity(
+      gameMapArr,
+      mapDimensions,
+      "."
+    );
     this.setState({ weapons });
 
-    const bossLoc = placeBoss(gameMapArr, mapDimensions, '.');
+    const bossLoc = placeBoss(gameMapArr, mapDimensions, ".");
     const boss = new Monster(bossLoc, currentLevel + 2);
     this.setState({ boss });
 
-    document.addEventListener('keydown', this.handlePlayerMove);
+    document.addEventListener("keydown", this.handlePlayerMove);
   }
 
   handleEntityCollision(newPlayerPos) {
@@ -146,7 +156,10 @@ export default class GameMap extends Component {
     // If tile contains a monster handle combat.
     if (isMonster && monsters[monsterIndex].isAlive()) {
       const player = this.state.player;
-      const playerDamage = Player.handleAttack(player.weapon.damage, player.level);
+      const playerDamage = Player.handleAttack(
+        player.weapon.damage,
+        player.level
+      );
       const monsterDamage = monsters[monsterIndex].handleAttack();
 
       monsters[monsterIndex].handleDefence(playerDamage);
@@ -181,7 +194,7 @@ export default class GameMap extends Component {
       const player = this.state.player;
       const potionPos = this.state.potionPos;
       potionPos.splice(potionIndex, 1);
-      if ((player.health + 20) >= 100) {
+      if (player.health + 20 >= 100) {
         player.health = 100;
         this.setState({ player });
       } else {
@@ -203,7 +216,10 @@ export default class GameMap extends Component {
     const boss = this.state.boss;
     if (_.isEqual(newPlayerPos, boss.location)) {
       const player = this.state.player;
-      const playerDamage = Player.handleAttack(player.weapon.damage, player.level);
+      const playerDamage = Player.handleAttack(
+        player.weapon.damage,
+        player.level
+      );
       const bossDamage = boss.handleAttack();
 
       boss.handleDefence(playerDamage);
@@ -240,19 +256,19 @@ export default class GameMap extends Component {
     const playerX = this.state.player.location.x;
     const playerY = this.state.player.location.y;
 
-    if (axis === 'x') {
-      if (direction === 'up') {
-        if (gameMap[playerX - 1][playerY] === '.') return true;
+    if (axis === "x") {
+      if (direction === "up") {
+        if (gameMap[playerX - 1][playerY] === ".") return true;
         return false;
       }
-      if (gameMap[playerX + 1][playerY] === '.') return true;
+      if (gameMap[playerX + 1][playerY] === ".") return true;
       return false;
     }
-    if (direction === 'left') {
-      if (gameMap[playerX][playerY - 1] === '.') return true;
+    if (direction === "left") {
+      if (gameMap[playerX][playerY - 1] === ".") return true;
       return false;
     }
-    if (gameMap[playerX][playerY + 1] === '.') return true;
+    if (gameMap[playerX][playerY + 1] === ".") return true;
     return false;
   }
 
@@ -266,53 +282,78 @@ export default class GameMap extends Component {
     let monsterIndex = 0;
 
     if (_.isEqual(playerPos, currentPos)) {
-      return <td className="floor"><img src={this.state.player.image} className="entity" /></td>;
+      return (
+        <td className="floor">
+          <img src={this.state.player.image} className="entity" />
+        </td>
+      );
     } else if (_.find(potionPos, currentPos)) {
       return <Potion key={`Potion${tileIndex}`} />;
     } else if (_.isEqual(boss.location, currentPos)) {
       return <Boss key="boss" />;
-    } else if (monsters.some((currentMonster, index) => {
-      monsterIndex = index;
-      return _.isEqual(currentMonster.location, currentPos);
-    })) {
+    } else if (
+      monsters.some((currentMonster, index) => {
+        monsterIndex = index;
+        return _.isEqual(currentMonster.location, currentPos);
+      })
+    ) {
       return monsters[monsterIndex].render();
     } else if (_.isEqual(weapon.location, currentPos)) {
-      return <td className="floor"><img src={weapon.image} className="entity" /></td>;
-    } else if (tile === '#') {
+      return (
+        <td className="floor">
+          <img src={weapon.image} className="entity" />
+        </td>
+      );
+    } else if (tile === "#") {
       const wallImages = [];
 
       // Handles pseudo-3D wall tile for top edges of floor space.
       if (Array.isArray(gameMap[rowIndex + 1])) {
-        if (gameMap[rowIndex + 1][tileIndex] === '.') {
+        if (gameMap[rowIndex + 1][tileIndex] === ".") {
           wallImages.push(wallTextureTop);
         }
       }
 
       // Handles top wall borders
       if (Array.isArray(gameMap[rowIndex + 2])) {
-        if (gameMap[rowIndex + 2][tileIndex] === '.' && gameMap[rowIndex + 1][tileIndex] === '#') {
+        if (
+          gameMap[rowIndex + 2][tileIndex] === "." &&
+          gameMap[rowIndex + 1][tileIndex] === "#"
+        ) {
           wallImages.push(wallTop);
         }
 
         if (gameMap[rowIndex][tileIndex + 1]) {
-          if (gameMap[rowIndex + 1][tileIndex + 1] === '.' && gameMap[rowIndex + 1][tileIndex] === '#') {
+          if (
+            gameMap[rowIndex + 1][tileIndex + 1] === "." &&
+            gameMap[rowIndex + 1][tileIndex] === "#"
+          ) {
             wallImages.push(wallLeft);
           }
 
-          if (gameMap[rowIndex + 2][tileIndex] === '#') {
-            if (gameMap[rowIndex + 2][tileIndex + 1] === '.' && gameMap[rowIndex + 1][tileIndex + 1] === '#') {
+          if (gameMap[rowIndex + 2][tileIndex] === "#") {
+            if (
+              gameMap[rowIndex + 2][tileIndex + 1] === "." &&
+              gameMap[rowIndex + 1][tileIndex + 1] === "#"
+            ) {
               wallImages.push(cornerTopLeft);
             }
           }
         }
 
         if (gameMap[rowIndex][tileIndex - 1]) {
-          if (gameMap[rowIndex + 1][tileIndex - 1] === '.' && gameMap[rowIndex + 1][tileIndex] === '#') {
+          if (
+            gameMap[rowIndex + 1][tileIndex - 1] === "." &&
+            gameMap[rowIndex + 1][tileIndex] === "#"
+          ) {
             wallImages.push(wallRight);
           }
 
-          if (gameMap[rowIndex + 2][tileIndex] === '#') {
-            if (gameMap[rowIndex + 2][tileIndex - 1] === '.' && gameMap[rowIndex + 1][tileIndex - 1] === '#') {
+          if (gameMap[rowIndex + 2][tileIndex] === "#") {
+            if (
+              gameMap[rowIndex + 2][tileIndex - 1] === "." &&
+              gameMap[rowIndex + 1][tileIndex - 1] === "#"
+            ) {
               wallImages.push(cornerTopRight);
             }
           }
@@ -321,33 +362,51 @@ export default class GameMap extends Component {
 
       // Handles bottom wall borders.
       if (Array.isArray(gameMap[rowIndex - 1])) {
-        if (gameMap[rowIndex - 1][tileIndex] === '.') {
+        if (gameMap[rowIndex - 1][tileIndex] === ".") {
           wallImages.push(wallBottom);
         }
 
         if (gameMap[rowIndex][tileIndex + 1]) {
-          if (gameMap[rowIndex - 1][tileIndex + 1] === '.' && gameMap[rowIndex][tileIndex + 1] === '.') {
-            if (Array.isArray(gameMap[rowIndex + 1]) && gameMap[rowIndex + 1][tileIndex] === '#') {
+          if (
+            gameMap[rowIndex - 1][tileIndex + 1] === "." &&
+            gameMap[rowIndex][tileIndex + 1] === "."
+          ) {
+            if (
+              Array.isArray(gameMap[rowIndex + 1]) &&
+              gameMap[rowIndex + 1][tileIndex] === "#"
+            ) {
               wallImages.push(wallLeft);
             }
           }
 
-          if (gameMap[rowIndex - 1][tileIndex] === '#') {
-            if (gameMap[rowIndex][tileIndex + 1] === '#' && gameMap[rowIndex - 1][tileIndex + 1] === '.') {
+          if (gameMap[rowIndex - 1][tileIndex] === "#") {
+            if (
+              gameMap[rowIndex][tileIndex + 1] === "#" &&
+              gameMap[rowIndex - 1][tileIndex + 1] === "."
+            ) {
               wallImages.push(cornerBottomLeft);
             }
           }
         }
 
         if (gameMap[rowIndex][tileIndex - 1]) {
-          if (gameMap[rowIndex - 1][tileIndex - 1] === '.' && gameMap[rowIndex][tileIndex - 1] === '.') {
-            if (Array.isArray(gameMap[rowIndex + 1]) && gameMap[rowIndex + 1][tileIndex] === '#') {
+          if (
+            gameMap[rowIndex - 1][tileIndex - 1] === "." &&
+            gameMap[rowIndex][tileIndex - 1] === "."
+          ) {
+            if (
+              Array.isArray(gameMap[rowIndex + 1]) &&
+              gameMap[rowIndex + 1][tileIndex] === "#"
+            ) {
               wallImages.push(wallRight);
             }
           }
 
-          if (gameMap[rowIndex - 1][tileIndex] === '#') {
-            if (gameMap[rowIndex][tileIndex - 1] === '#' && gameMap[rowIndex - 1][tileIndex - 1] === '.') {
+          if (gameMap[rowIndex - 1][tileIndex] === "#") {
+            if (
+              gameMap[rowIndex][tileIndex - 1] === "#" &&
+              gameMap[rowIndex - 1][tileIndex - 1] === "."
+            ) {
               wallImages.push(cornerBottomRight);
             }
           }
@@ -355,9 +414,9 @@ export default class GameMap extends Component {
       }
 
       const wallImgStyle = {
-        position: 'absolute',
-        top: '0px',
-        left: '0px',
+        position: "absolute",
+        top: "0px",
+        left: "0px",
         height: 60,
         width: 60,
       };
@@ -365,9 +424,12 @@ export default class GameMap extends Component {
       return (
         <td>
           <div className="wall">
-            {wallImages.map(wallImg => <img style={wallImgStyle} src={wallImg} />)}
+            {wallImages.map((wallImg) => (
+              <img style={wallImgStyle} src={wallImg} />
+            ))}
           </div>
-        </td>);
+        </td>
+      );
     }
 
     return <td className="floor" key={`tile${tileIndex}`} />;
@@ -381,48 +443,48 @@ export default class GameMap extends Component {
     const playerY = this.state.player.location.y;
     // Check tile that player wants to move to and move Player
     switch (event.key) {
-      case 'w':
-      case 'ArrowUp':
+      case "w":
+      case "ArrowUp":
         if (this.handleEntityCollision({ x: playerX - 1, y: playerY })) {
           break;
         }
-        if (this.checkPlayerMove('x', 'up')) {
+        if (this.checkPlayerMove("x", "up")) {
           player.location.x = playerX - 1;
           player.location.y = playerY;
           player.image = heroBackStill;
           this.setState({ player });
         }
         break;
-      case 's':
-      case 'ArrowDown':
+      case "s":
+      case "ArrowDown":
         if (this.handleEntityCollision({ x: playerX + 1, y: playerY })) {
           break;
         }
-        if (this.checkPlayerMove('x', 'down')) {
+        if (this.checkPlayerMove("x", "down")) {
           player.location.x = playerX + 1;
           player.location.y = playerY;
           player.image = heroFrontStill;
           this.setState({ player });
         }
         break;
-      case 'a':
-      case 'ArrowLeft':
+      case "a":
+      case "ArrowLeft":
         if (this.handleEntityCollision({ x: playerX, y: playerY - 1 })) {
           break;
         }
-        if (this.checkPlayerMove('y', 'left')) {
+        if (this.checkPlayerMove("y", "left")) {
           player.location.x = playerX;
           player.location.y = playerY - 1;
           player.image = heroLeftStill;
           this.setState({ player });
         }
         break;
-      case 'd':
-      case 'ArrowRight':
+      case "d":
+      case "ArrowRight":
         if (this.handleEntityCollision({ x: playerX, y: playerY + 1 })) {
           break;
         }
-        if (this.checkPlayerMove('y', 'right')) {
+        if (this.checkPlayerMove("y", "right")) {
           player.location.x = playerX;
           player.location.y = playerY + 1;
           player.image = heroRightStill;
@@ -434,10 +496,13 @@ export default class GameMap extends Component {
     }
   }
 
-
   render() {
     const playerPos = this.state.player.location;
-    const viewBoundary = getViewBoundary(playerPos, this.state.mapDimensions, 5);
+    const viewBoundary = getViewBoundary(
+      playerPos,
+      this.state.mapDimensions,
+      5
+    );
 
     if (this.state.gameLost) {
       return (
@@ -460,20 +525,29 @@ export default class GameMap extends Component {
         <table>
           <tbody>
             {this.state.gameMap.map((rowArr, rowIndex, gameMap) => {
-              if (rowIndex >= viewBoundary.top && rowIndex <= viewBoundary.bottom) {
+              if (
+                rowIndex >= viewBoundary.top &&
+                rowIndex <= viewBoundary.bottom
+              ) {
                 return (
                   <tr key={`row${rowIndex}`}>
                     {rowArr.map((tile, tileIndex) => {
-                      if (tileIndex >= viewBoundary.left && tileIndex <= viewBoundary.right){
-                        return this.getTileType(rowIndex, tileIndex, tile, gameMap);
+                      if (
+                        tileIndex >= viewBoundary.left &&
+                        tileIndex <= viewBoundary.right
+                      ) {
+                        return this.getTileType(
+                          rowIndex,
+                          tileIndex,
+                          tile,
+                          gameMap
+                        );
                       }
-                    })
-                    }
+                    })}
                   </tr>
                 );
               }
-            })
-            }
+            })}
           </tbody>
         </table>
         <PlayerInfo
@@ -487,8 +561,8 @@ export default class GameMap extends Component {
 }
 
 GameMap.propTypes = {
-  MapDimensions: React.PropTypes.shape({
-    height: React.PropTypes.number.isRequired,
-    width: React.PropTypes.number.isRequired,
+  MapDimensions: shape({
+    height: number.isRequired,
+    width: number.isRequired,
   }).isRequired,
 };

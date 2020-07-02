@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+// import React, { Component } from 'react';
 
 /*export default class Player extends Component {
   constructor(props) {
@@ -40,7 +40,7 @@ import React, { Component } from 'react';
 
 const Player = {
   handleAttack(damage, level) {
-    const attackDamage = Math.round((Math.random() * damage) + 1);
+    const attackDamage = Math.round(Math.random() * damage + 1);
     return attackDamage;
   },
   handleXp(currentXp, currentLvl, xpEarnt) {
@@ -56,7 +56,7 @@ const Player = {
       return true;
     }
     return false;
-  }
-}
+  },
+};
 
 export default Player;
